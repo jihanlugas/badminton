@@ -1,0 +1,144 @@
+@startuml
+
+!define type(x) <color:green>""x""</color>
+
+entity "users" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    role: type(varchar)
+    email: type(varchar)
+    username: type(varchar)
+    no_hp: type(varchar)
+    fullname: type(varchar)
+    passwd: type(varchar)
+    pass_version: type(varchar)
+    is_active: type(bool)
+    photo_id: type(varchar)
+    last_login_dt: type(timestampTz)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "companies" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    name: type(varchar)
+    description: type(varchar)
+    balance: type(int)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "usercompanies" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    user_id: type(varchar)
+    company_id: type(varchar)
+    is_default_company: type(bool)
+    is_creator: type(bool)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "players" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    company_id: type(varchar)
+    name: type(varchar)
+    email: type(varchar)
+    no_hp: type(varchar)
+    is_active: type(bool)
+    photo_id: type(varchar)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "gors" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    company_id: type(varchar)
+    name: type(varchar)
+    description: type(varchar)
+    address: type(varchar)
+    normal_game_price: type(int)
+    rubber_game_price: type(int)
+    ball_price: type(int)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "games" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    gor_id: type(varchar)
+    name: type(varchar)
+    description: type(varchar)
+    normal_game_price: type(int)
+    rubber_game_price: type(int)
+    ball_price: type(int)
+    game_dt: type(timestampTz)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "gameplayers" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    game_id: type(varchar)
+    player_id: type(varchar)
+    normal_game: type(int)
+    rubber_game: type(int)
+    ball: type(int)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+    update_by: type(varchar)
+    update_dt: type(timestampTz)
+    delete_by: type(varchar)
+    delete_dt: type(timestampTz)
+}
+
+entity "transactions" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    company_id: type(varchar)
+    name: type(varchar)
+    is_debit: type(bool)
+    price: type(int)
+    create_by: type(varchar)
+    create_dt: type(timestampTz)
+}
+
+users --{ usercompanies
+companies --{ usercompanies
+companies --{ gors
+companies --{ players
+gors --{ games
+games --{ gameplayers
+players --{ gameplayers
+
+
+@enduml
