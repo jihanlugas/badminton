@@ -159,6 +159,80 @@ func up() {
 		panic(err)
 	}
 
+	vTransaction := conn.Model(&model.Transaction{}).
+		Select("transactions.*, companies.name as company_name, u1.fullname as create_name").
+		Joins("left join companies companies on companies.id = transactions.company_id").
+		Joins("left join users u1 on u1.id = transactions.create_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_TRANSACTION, gorm.ViewOption{
+		Replace: true,
+		Query:   vTransaction,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGor := conn.Model(&model.Gor{}).
+		Select("gors.*, companies.name as company_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Joins("left join companies companies on companies.id = gors.company_id").
+		Joins("left join users u1 on u1.id = gors.create_by").
+		Joins("left join users u2 on u2.id = gors.update_by").
+		Joins("left join users u3 on u3.id = gors.delete_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GOR, gorm.ViewOption{
+		Replace: true,
+		Query:   vGor,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGame := conn.Model(&model.Game{}).
+		Select("games.*, gors.name as gor_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Joins("left join gors gors on gors.id = games.gor_id").
+		Joins("left join users u1 on u1.id = games.create_by").
+		Joins("left join users u2 on u2.id = games.update_by").
+		Joins("left join users u3 on u3.id = games.delete_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAME, gorm.ViewOption{
+		Replace: true,
+		Query:   vGame,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vPlayer := conn.Model(&model.Player{}).
+		Select("players.*, companies.name as company_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Joins("left join companies companies on companies.id = players.company_id").
+		Joins("left join users u1 on u1.id = players.create_by").
+		Joins("left join users u2 on u2.id = players.update_by").
+		Joins("left join users u3 on u3.id = players.delete_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_PLAYER, gorm.ViewOption{
+		Replace: true,
+		Query:   vPlayer,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGameplayer := conn.Model(&model.Gameplayer{}).
+		Select("gameplayers.*, players.name as player_name, games.name as game_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Joins("left join players players on players.id = gameplayers.player_id").
+		Joins("left join games games on games.id = gameplayers.game_id").
+		Joins("left join users u1 on u1.id = gameplayers.create_by").
+		Joins("left join users u2 on u2.id = gameplayers.update_by").
+		Joins("left join users u3 on u3.id = gameplayers.delete_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAMEPLAYER, gorm.ViewOption{
+		Replace: true,
+		Query:   vGameplayer,
+	})
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 // remove public schema

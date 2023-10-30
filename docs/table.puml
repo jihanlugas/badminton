@@ -59,6 +59,7 @@ entity "players" <<(P,LightGreen)>> {
     name: type(varchar)
     email: type(varchar)
     no_hp: type(varchar)
+    address: type(varchar)
     is_active: type(bool)
     photo_id: type(varchar)
     create_by: type(varchar)

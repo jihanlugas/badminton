@@ -35,6 +35,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageUser) ([]model.UserView
 		Where("email LIKE ?", "%"+req.Email+"%").
 		Where("username LIKE ?", "%"+req.Username+"%").
 		Where("no_hp LIKE ?", "%"+utils.FormatPhoneTo62(req.NoHp)+"%").
+		Where("delete_dt IS NULL").
 		Count(&count).Error
 	if err != nil {
 		return data, count, err
@@ -43,6 +44,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageUser) ([]model.UserView
 	err = conn.Where("email LIKE ?", "%"+req.Email+"%").
 		Where("username LIKE ?", "%"+req.Username+"%").
 		Where("no_hp LIKE ?", "%"+utils.FormatPhoneTo62(req.NoHp)+"%").
+		Where("delete_dt IS NULL").
 		Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).
 		Find(&data).Error
@@ -57,7 +59,7 @@ func (r repository) GetById(conn *gorm.DB, id string) (model.User, error) {
 	var err error
 	var data model.User
 
-	err = conn.Where("id = ? ", id).First(&data).Error
+	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -65,7 +67,7 @@ func (r repository) GetByEmail(conn *gorm.DB, email string) (model.User, error) 
 	var err error
 	var data model.User
 
-	err = conn.Where("email = ? ", email).First(&data).Error
+	err = conn.Where("email = ? ", email).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -73,7 +75,7 @@ func (r repository) GetByUsername(conn *gorm.DB, username string) (model.User, e
 	var err error
 	var data model.User
 
-	err = conn.Where("username = ? ", username).First(&data).Error
+	err = conn.Where("username = ? ", username).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -81,7 +83,7 @@ func (r repository) GetByNoHp(conn *gorm.DB, noHp string) (model.User, error) {
 	var err error
 	var data model.User
 
-	err = conn.Where("no_hp = ? ", utils.FormatPhoneTo62(noHp)).First(&data).Error
+	err = conn.Where("no_hp = ? ", utils.FormatPhoneTo62(noHp)).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -89,7 +91,7 @@ func (r repository) GetViewById(conn *gorm.DB, id string) (model.UserView, error
 	var err error
 	var data model.UserView
 
-	err = conn.Where("id = ? ", id).First(&data).Error
+	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -97,7 +99,7 @@ func (r repository) GetViewByEmail(conn *gorm.DB, email string) (model.UserView,
 	var err error
 	var data model.UserView
 
-	err = conn.Where("email = ? ", email).First(&data).Error
+	err = conn.Where("email = ? ", email).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -105,7 +107,7 @@ func (r repository) GetViewByUsername(conn *gorm.DB, username string) (model.Use
 	var err error
 	var data model.UserView
 
-	err = conn.Where("username = ? ", username).First(&data).Error
+	err = conn.Where("username = ? ", username).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
@@ -113,7 +115,7 @@ func (r repository) GetViewByNoHp(conn *gorm.DB, noHp string) (model.UserView, e
 	var err error
 	var data model.UserView
 
-	err = conn.Where("no_hp = ? ", utils.FormatPhoneTo62(noHp)).First(&data).Error
+	err = conn.Where("no_hp = ? ", utils.FormatPhoneTo62(noHp)).Where("delete_dt IS NULL").First(&data).Error
 	return data, err
 }
 
