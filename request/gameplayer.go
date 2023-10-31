@@ -1,7 +1,7 @@
 package request
 
 type CreateGameplayer struct {
-	GorID      string `json:"gorId" validate:"required"`
+	GameID     string `json:"gameId" validate:"required"`
 	PlayerID   string `json:"playerId" validate:"required"`
 	NormalGame int64  `json:"normalGame" validate:""`
 	RubberGame int64  `json:"rubberGame" validate:""`
@@ -9,7 +9,7 @@ type CreateGameplayer struct {
 }
 
 type UpdateGameplayer struct {
-	GorID      string `json:"gorId" validate:"required"`
+	GameID     string `json:"gameId" validate:"required"`
 	PlayerID   string `json:"playerId" validate:"required"`
 	NormalGame int64  `json:"normalGame" validate:""`
 	RubberGame int64  `json:"rubberGame" validate:""`

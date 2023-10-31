@@ -1,4 +1,4 @@
-package gor
+package game
 
 import (
 	"github.com/jihanlugas/badminton/model"

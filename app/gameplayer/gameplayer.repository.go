@@ -1,4 +1,4 @@
-package gor
+package gameplayer
 
 import (
 	"github.com/jihanlugas/badminton/model"
