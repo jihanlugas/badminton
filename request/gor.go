@@ -1,7 +1,7 @@
 package request
 
 type CreateGor struct {
-	CompanyID       string `json:"companyId" validate:"required"`
+	CompanyID       string `json:"companyId" validate:"required,existsdata=company_id"`
 	Name            string `json:"name" validate:"required"`
 	Description     string `json:"description" validate:""`
 	Address         string `json:"address" validate:""`
@@ -11,7 +11,7 @@ type CreateGor struct {
 }
 
 type UpdateGor struct {
-	CompanyID       string `json:"companyId" validate:"required"`
+	CompanyID       string `json:"companyId" validate:"required,existsdata=company_id"`
 	Name            string `json:"name" validate:"required"`
 	Description     string `json:"description" validate:""`
 	Address         string `json:"address" validate:""`

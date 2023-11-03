@@ -6,7 +6,12 @@ import (
 	"github.com/jihanlugas/badminton/app/app"
 	"github.com/jihanlugas/badminton/app/authentication"
 	"github.com/jihanlugas/badminton/app/company"
+	"github.com/jihanlugas/badminton/app/game"
+	"github.com/jihanlugas/badminton/app/gameplayer"
+	"github.com/jihanlugas/badminton/app/gor"
 	"github.com/jihanlugas/badminton/app/jwt"
+	"github.com/jihanlugas/badminton/app/player"
+	"github.com/jihanlugas/badminton/app/transaction"
 	"github.com/jihanlugas/badminton/app/user"
 	"github.com/jihanlugas/badminton/app/usercompany"
 	"github.com/jihanlugas/badminton/config"
@@ -27,15 +32,29 @@ func Init() *echo.Echo {
 	userRepo := user.NewRepository()
 	companyRepo := company.NewRepository()
 	usercompanyRepo := usercompany.NewRepository()
-	//itemRepo := item.NewItemRepository()
+	transactionRepo := transaction.NewRepository()
+	gorRepo := gor.NewRepository()
+	gameRepo := game.NewRepository()
+	playerRepo := player.NewRepository()
+	gameplayerRepo := gameplayer.NewRepository()
 
 	authenticationUsecase := authentication.NewAuthenticationUsecase(authenticationRepo, userRepo, companyRepo, usercompanyRepo)
 	userUsecase := user.NewUserUsecase(userRepo)
 	companyUsecase := company.NewCompanyUsecase(companyRepo, userRepo, usercompanyRepo)
+	transactionUsecase := transaction.NewTransactionUsecase(transactionRepo)
+	gorUsecase := gor.NewGorUsecase(gorRepo)
+	gameUsecase := game.NewGameUsecase(gameRepo)
+	playerUsecase := player.NewPlayerUsecase(playerRepo)
+	gameplayerUsecase := gameplayer.NewGameplayerUsecase(gameplayerRepo)
 
 	authenticationHandler := authentication.NewAuthenticationHandler(authenticationUsecase)
 	userHandler := user.UserHandler(userUsecase)
 	companyHandler := company.CompanyHandler(companyUsecase)
+	transactionHandler := transaction.TransactionHandler(transactionUsecase)
+	gorHandler := gor.GorHandler(gorUsecase)
+	gameHandler := game.GameHandler(gameUsecase)
+	playerHandler := player.PlayerHandler(playerUsecase)
+	gameplayerHandler := gameplayer.GameplayerHandler(gameplayerUsecase)
 
 	//router.Use(logMiddleware)
 	//router.Use(loggerMiddleware)
@@ -62,6 +81,39 @@ func Init() *echo.Echo {
 	companyRouter.PUT("/:id", companyHandler.Update, checkTokenAdminMiddleware)
 	companyRouter.DELETE("/:id", companyHandler.Delete, checkTokenAdminMiddleware)
 	companyRouter.GET("/page", companyHandler.Page, checkTokenAdminMiddleware)
+
+	transactionRouter := router.Group("/transaction")
+	transactionRouter.GET("/:id", transactionHandler.GetById)
+	transactionRouter.POST("", transactionHandler.Create, checkTokenMiddleware)
+	transactionRouter.GET("/page", transactionHandler.Page, checkTokenMiddleware)
+
+	gorRouter := router.Group("/gor")
+	gorRouter.GET("/:id", gorHandler.GetById)
+	gorRouter.POST("", gorHandler.Create, checkTokenMiddleware)
+	gorRouter.PUT("/:id", gorHandler.Update, checkTokenMiddleware)
+	gorRouter.DELETE("/:id", gorHandler.Delete, checkTokenMiddleware)
+	gorRouter.GET("/page", gorHandler.Page, checkTokenMiddleware)
+
+	gameRouter := router.Group("/game")
+	gameRouter.GET("/:id", gameHandler.GetById)
+	gameRouter.POST("", gameHandler.Create, checkTokenMiddleware)
+	gameRouter.PUT("/:id", gameHandler.Update, checkTokenMiddleware)
+	gameRouter.DELETE("/:id", gameHandler.Delete, checkTokenMiddleware)
+	gameRouter.GET("/page", gameHandler.Page, checkTokenMiddleware)
+
+	playerRouter := router.Group("/player")
+	playerRouter.GET("/:id", playerHandler.GetById)
+	playerRouter.POST("", playerHandler.Create, checkTokenMiddleware)
+	playerRouter.PUT("/:id", playerHandler.Update, checkTokenMiddleware)
+	playerRouter.DELETE("/:id", playerHandler.Delete, checkTokenMiddleware)
+	playerRouter.GET("/page", playerHandler.Page, checkTokenMiddleware)
+
+	gameplayerRouter := router.Group("/gameplayer")
+	gameplayerRouter.GET("/:id", gameplayerHandler.GetById)
+	gameplayerRouter.POST("", gameplayerHandler.Create, checkTokenMiddleware)
+	gameplayerRouter.PUT("/:id", gameplayerHandler.Update, checkTokenMiddleware)
+	gameplayerRouter.DELETE("/:id", gameplayerHandler.Delete, checkTokenMiddleware)
+	gameplayerRouter.GET("/page", gameplayerHandler.Page, checkTokenMiddleware)
 
 	return router
 
@@ -150,14 +202,14 @@ func checkTokenAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		conn, closeConn := db.GetConnection()
 		defer closeConn()
 
-		if userLogin.Role != constant.RoleAdmin {
-			return response.ErrorForce(http.StatusUnauthorized, "Token Expired.", response.Payload{}).SendJSON(c)
-		}
-
 		var user model.User
 		err = conn.Where("id = ? ", userLogin.UserID).First(&user).Error
 		if err != nil {
 			return response.ErrorForce(http.StatusUnauthorized, "Token Expired!", response.Payload{}).SendJSON(c)
+		}
+
+		if user.Role != constant.RoleAdmin {
+			return response.ErrorForce(http.StatusUnauthorized, "permission denied.", response.Payload{}).SendJSON(c)
 		}
 
 		if user.PassVersion != userLogin.PassVersion {
