@@ -5,10 +5,30 @@ definitions:
         type: integer
       description:
         type: string
+      email:
+        maxLength: 200
+        type: string
+      fullname:
+        maxLength: 80
+        type: string
       name:
         type: string
+      noHp:
+        maxLength: 20
+        type: string
+      passwd:
+        maxLength: 200
+        type: string
+      username:
+        maxLength: 20
+        type: string
     required:
+    - email
+    - fullname
     - name
+    - noHp
+    - passwd
+    - username
     type: object
   request.CreateUser:
     properties:

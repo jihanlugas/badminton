@@ -2,6 +2,7 @@ package validator
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/jihanlugas/badminton/app/company"
 	"github.com/jihanlugas/badminton/app/user"
 	"github.com/jihanlugas/badminton/config"
 	"github.com/jihanlugas/badminton/db"
@@ -33,6 +34,11 @@ func init() {
 
 func (v *CustomValidator) Validate(i interface{}) error {
 	return v.validator.Struct(i)
+}
+
+// ValidateVar for validate field against tag. Expl: ValidateVar("abc@gmail.com", "required,email")
+func (v *CustomValidator) ValidateVar(field interface{}, tag string) error {
+	return v.validator.Var(field, tag)
 }
 
 func NewValidator() *CustomValidator {
@@ -122,6 +128,7 @@ func existsDataOnDbTable(fl validator.FieldLevel) bool {
 		return true
 	}
 
+	companyRepo := company.NewRepository()
 	userRepo := user.NewRepository()
 
 	conn, closeConn := db.GetConnection()
@@ -129,15 +136,24 @@ func existsDataOnDbTable(fl validator.FieldLevel) bool {
 
 	switch params[0] {
 	case "user_id":
-		userID := fl.Field().String()
-		if userID == "" {
+		ID := fl.Field().String()
+		if ID == "" {
 			return true
 		}
-		_, err = userRepo.GetByUsername(conn, userID)
+		_, err = userRepo.GetById(conn, ID)
 		if err != nil {
 			return false
 		}
-
+		return true
+	case "company_id":
+		ID := fl.Field().String()
+		if ID == "" {
+			return true
+		}
+		_, err = companyRepo.GetById(conn, ID)
+		if err != nil {
+			return false
+		}
 		return true
 		//case "election_id":
 		//	electionID := fl.Field().Int()

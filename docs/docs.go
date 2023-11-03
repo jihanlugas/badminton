@@ -593,7 +593,12 @@ const docTemplate = `{
         "request.CreateCompany": {
             "type": "object",
             "required": [
-                "name"
+                "email",
+                "fullname",
+                "name",
+                "noHp",
+                "passwd",
+                "username"
             ],
             "properties": {
                 "balance": {
@@ -602,8 +607,28 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "fullname": {
+                    "type": "string",
+                    "maxLength": 80
+                },
                 "name": {
                     "type": "string"
+                },
+                "noHp": {
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "passwd": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 20
                 }
             }
         },

@@ -17,6 +17,7 @@ type Usecase interface {
 	Update(loginUser jwt.UserLogin, id string, req *request.UpdateUser) error
 	Delete(loginUser jwt.UserLogin, id string) error
 	Page(req *request.PageUser) ([]model.UserView, int64, error)
+	ChangePassword(loginUser jwt.UserLogin, req *request.ChangePassword) error
 }
 
 type usecaseUser struct {
@@ -27,7 +28,7 @@ func (u usecaseUser) Create(loginUser jwt.UserLogin, req *request.CreateUser) er
 	var err error
 	var data model.User
 
-	password, err := cryption.EncryptAES64("123456")
+	password, err := cryption.EncryptAES64(req.Passwd)
 	if err != nil {
 		return errors.New("failed to encrypt")
 	}
@@ -150,6 +151,41 @@ func (u usecaseUser) Page(req *request.PageUser) ([]model.UserView, int64, error
 	}
 
 	return data, count, err
+}
+
+func (u usecaseUser) ChangePassword(loginUser jwt.UserLogin, req *request.ChangePassword) error {
+	var err error
+	var data model.User
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	data, err = u.repo.GetById(conn, loginUser.UserID)
+	if err != nil {
+		return err
+	}
+
+	password, err := cryption.EncryptAES64(req.Passwd)
+	if err != nil {
+		return errors.New("failed to encrypt")
+	}
+
+	if password != data.Passwd {
+		return errors.New("password not match")
+	}
+
+	data.PassVersion++
+	data.Passwd = password
+	data.UpdateBy = loginUser.UserID
+
+	tx := conn.Begin()
+
+	err = u.repo.Update(tx, data)
+	if err != nil {
+		return err
+	}
+
+	return err
 }
 
 func NewUserUsecase(repo Repository) Usecase {

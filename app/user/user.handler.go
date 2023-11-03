@@ -177,3 +177,37 @@ func (h Handler) Page(c echo.Context) error {
 
 	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
 }
+
+// ChangePassword
+// @Tags User
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param req body request.ResetPassword true "json req body"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /user/reset-password [post]
+func (h Handler) ChangePassword(c echo.Context) error {
+	var err error
+
+	loginUser, err := jwt.GetUserLoginInfo(c)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	req := new(request.ChangePassword)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	if err = c.Validate(req); err != nil {
+		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
+	}
+
+	err = h.usecase.ChangePassword(loginUser, req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.Payload{}).SendJSON(c)
+}

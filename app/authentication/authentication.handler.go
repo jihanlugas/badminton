@@ -98,7 +98,3 @@ func (h AuthenticationHandler) RefreshToken(c echo.Context) error {
 		"token": token,
 	}).SendJSON(c)
 }
-
-func (h AuthenticationHandler) ResetPassword(c echo.Context) error {
-	return nil
-}

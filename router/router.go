@@ -31,7 +31,7 @@ func Init() *echo.Echo {
 
 	authenticationUsecase := authentication.NewAuthenticationUsecase(authenticationRepo, userRepo, companyRepo, usercompanyRepo)
 	userUsecase := user.NewUserUsecase(userRepo)
-	companyUsecase := company.NewCompanyUsecase(companyRepo)
+	companyUsecase := company.NewCompanyUsecase(companyRepo, userRepo, usercompanyRepo)
 
 	authenticationHandler := authentication.NewAuthenticationHandler(authenticationUsecase)
 	userHandler := user.UserHandler(userUsecase)
@@ -47,7 +47,6 @@ func Init() *echo.Echo {
 	//router.GET("/sign-out", authenticationHandler.SignOut)
 	//router.POST("/sign-up", authenticationHandler.SignUp)
 	router.GET("/refresh-token", authenticationHandler.RefreshToken, checkTokenAdminMiddleware)
-	//router.GET("/reset-password", authenticationHandler.ResetPassword)
 
 	userRouter := router.Group("/user")
 	userRouter.GET("/:id", userHandler.GetById)
@@ -55,6 +54,7 @@ func Init() *echo.Echo {
 	userRouter.PUT("/:id", userHandler.Update, checkTokenAdminMiddleware)
 	userRouter.DELETE("/:id", userHandler.Delete, checkTokenAdminMiddleware)
 	userRouter.GET("/page", userHandler.Page, checkTokenAdminMiddleware)
+	userRouter.POST("/change-password", userHandler.ChangePassword, checkTokenMiddleware)
 
 	companyRouter := router.Group("/company")
 	companyRouter.GET("/:id", companyHandler.GetById)
@@ -110,56 +110,6 @@ func httpErrorHandler(err error, c echo.Context) {
 		_ = c.Blob(code, echo.MIMEApplicationJSONCharsetUTF8, b)
 	}
 }
-
-//func logMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		body, _ := io.ReadAll(c.Request().Body)
-//		c.Set(constant.Request, string(body))
-//		c.Request().Body = io.NopCloser(bytes.NewBuffer(body))
-//
-//		return next(c)
-//	}
-//}
-
-//func loggerMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		var err error
-//		body, _ := io.ReadAll(c.Request().Body)
-//		c.Set(constant.Request, string(body))
-//		c.Request().Body = io.NopCloser(bytes.NewBuffer(body))
-//
-//		// Call next handler
-//		if err := next(c); err != nil {
-//			c.Error(err)
-//		}
-//
-//		res := ""
-//		if c.Get(constant.Response) != nil {
-//			res = string(c.Get(constant.Response).([]byte))
-//		}
-//
-//		loginUserString := ""
-//		loginUser, err := user.GetUserLoginInfo(c)
-//		if err == nil {
-//			loginUserByte, _ := json.Marshal(loginUser)
-//			loginUserString = string(loginUserByte)
-//		}
-//
-//		logData := model.Log{
-//			ClientIP:  c.Request().RemoteAddr,
-//			Method:    c.Request().Method,
-//			Path:      c.Request().URL.String(),
-//			Code:      c.Response().Status,
-//			Loginuser: loginUserString,
-//			Request:   string(body),
-//			Response:  res,
-//		}
-//
-//		go log.AddLog(logData)
-//
-//		return nil
-//	}
-//}
 
 func checkTokenMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -218,3 +168,53 @@ func checkTokenAdminMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+//func logMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+//	return func(c echo.Context) error {
+//		body, _ := io.ReadAll(c.Request().Body)
+//		c.Set(constant.Request, string(body))
+//		c.Request().Body = io.NopCloser(bytes.NewBuffer(body))
+//
+//		return next(c)
+//	}
+//}
+
+//func loggerMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+//	return func(c echo.Context) error {
+//		var err error
+//		body, _ := io.ReadAll(c.Request().Body)
+//		c.Set(constant.Request, string(body))
+//		c.Request().Body = io.NopCloser(bytes.NewBuffer(body))
+//
+//		// Call next handler
+//		if err := next(c); err != nil {
+//			c.Error(err)
+//		}
+//
+//		res := ""
+//		if c.Get(constant.Response) != nil {
+//			res = string(c.Get(constant.Response).([]byte))
+//		}
+//
+//		loginUserString := ""
+//		loginUser, err := user.GetUserLoginInfo(c)
+//		if err == nil {
+//			loginUserByte, _ := json.Marshal(loginUser)
+//			loginUserString = string(loginUserByte)
+//		}
+//
+//		logData := model.Log{
+//			ClientIP:  c.Request().RemoteAddr,
+//			Method:    c.Request().Method,
+//			Path:      c.Request().URL.String(),
+//			Code:      c.Response().Status,
+//			Loginuser: loginUserString,
+//			Request:   string(body),
+//			Response:  res,
+//		}
+//
+//		go log.AddLog(logData)
+//
+//		return nil
+//	}
+//}
