@@ -98,3 +98,35 @@ func (h AuthenticationHandler) RefreshToken(c echo.Context) error {
 		"token": token,
 	}).SendJSON(c)
 }
+
+// Init
+// @Tags Authentication
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /refresh-token [get]
+func (h AuthenticationHandler) Init(c echo.Context) error {
+	var err error
+
+	loginUser, err := jwt.GetUserLoginInfo(c)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	user, company, err := h.usecase.Init(loginUser)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	resUser := response.User(*user)
+	resCompany := response.Company(*company)
+
+	res := response.Init{
+		User:    &resUser,
+		Company: &resCompany,
+	}
+
+	return response.Success(http.StatusOK, "success", res).SendJSON(c)
+}

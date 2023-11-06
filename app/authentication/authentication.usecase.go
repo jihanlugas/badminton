@@ -19,6 +19,7 @@ import (
 type AuthenticationUsecase interface {
 	SignIn(req *request.Signin) (string, error)
 	RefreshToken(loginUser jwt.UserLogin) (string, error)
+	Init(loginUser jwt.UserLogin) (*model.UserView, *model.CompanyView, error)
 }
 
 type usecaseAuthentication struct {
@@ -110,6 +111,29 @@ func (u usecaseAuthentication) RefreshToken(loginUser jwt.UserLogin) (string, er
 	}
 
 	return token, err
+}
+
+func (u usecaseAuthentication) Init(loginUser jwt.UserLogin) (*model.UserView, *model.CompanyView, error) {
+	var err error
+	var dataUser model.UserView
+	var dataCompany model.CompanyView
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	dataUser, err = u.userRepo.GetViewById(conn, loginUser.UserID)
+	if err != nil {
+		return &dataUser, &dataCompany, err
+	}
+
+	if loginUser.Role != constant.RoleAdmin {
+		dataCompany, err = u.companyRepo.GetViewById(conn, loginUser.CompanyID)
+		if err != nil {
+			return &dataUser, &dataCompany, err
+		}
+	}
+
+	return &dataUser, &dataCompany, err
 }
 
 func NewAuthenticationUsecase(repo Repository, userRepo user.Repository, companyRepo company.Repository, usercompanyRepo usercompany.Repository) AuthenticationUsecase {

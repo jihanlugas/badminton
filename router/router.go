@@ -66,6 +66,7 @@ func Init() *echo.Echo {
 	//router.GET("/sign-out", authenticationHandler.SignOut)
 	//router.POST("/sign-up", authenticationHandler.SignUp)
 	router.GET("/refresh-token", authenticationHandler.RefreshToken, checkTokenAdminMiddleware)
+	router.GET("/init", authenticationHandler.Init, checkTokenMiddleware)
 
 	userRouter := router.Group("/user")
 	userRouter.GET("/:id", userHandler.GetById)
