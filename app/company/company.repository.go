@@ -1,6 +1,7 @@
 package company
 
 import (
+	"fmt"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
@@ -73,20 +74,22 @@ func (r repository) Page(conn *gorm.DB, req *request.PageCompany) ([]model.Compa
 	var data []model.CompanyView
 	var count int64
 
-	err = conn.Model(&data).
+	query := conn.Model(&data).
 		Where("name LIKE ?", "%"+req.Name+"%").
 		Where("description LIKE ?", "%"+req.Description+"%").
-		Where("delete_dt IS NULL").
-		Count(&count).Error
+		Where("delete_dt IS NULL")
+
+	err = query.Count(&count).Error
 	if err != nil {
 		return data, count, err
 	}
 
-	err = conn.
-		Where("name LIKE ?", "%"+req.Name+"%").
-		Where("description LIKE ?", "%"+req.Description+"%").
-		Where("delete_dt IS NULL").
-		Offset((req.GetPage() - 1) * req.GetLimit()).
+	if req.SortField != "" {
+		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
+	} else {
+		query = query.Order(fmt.Sprintf("%s %s", "name", "asc"))
+	}
+	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).
 		Find(&data).Error
 	if err != nil {

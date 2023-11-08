@@ -108,6 +108,16 @@
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -338,6 +348,16 @@
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -562,6 +582,16 @@
                     {
                         "type": "string",
                         "name": "playerId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -797,6 +827,16 @@
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -1037,6 +1077,16 @@
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -1360,6 +1410,16 @@
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1497,6 +1557,16 @@
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     },
                     {

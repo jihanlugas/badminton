@@ -5,8 +5,10 @@ import (
 )
 
 type Paging struct {
-	Page  int `json:"page,omitempty" form:"page" query:"page"`
-	Limit int `json:"limit,omitempty" form:"limit" query:"limit"`
+	Page      int    `json:"page,omitempty" form:"page" query:"page"`
+	Limit     int    `json:"limit,omitempty" form:"limit" query:"limit"`
+	SortField string `json:"sortField,omitempty" form:"sortField" query:"sortField"`
+	SortOrder string `json:"sortOrder,omitempty" form:"sortOrder" query:"sortOrder"`
 }
 
 func (p *Paging) GetPage() int {

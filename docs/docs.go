@@ -115,6 +115,16 @@ const docTemplate = `{
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -345,6 +355,16 @@ const docTemplate = `{
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -569,6 +589,16 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "playerId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -804,6 +834,16 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -1044,6 +1084,16 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -1367,6 +1417,16 @@ const docTemplate = `{
                         "type": "integer",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1504,6 +1564,16 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortOrder",
                         "in": "query"
                     },
                     {

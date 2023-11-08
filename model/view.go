@@ -31,7 +31,7 @@ func (UserView) TableName() string {
 }
 
 type CompanyView struct {
-	ID          string     `json:"primaryKey"`
+	ID          string     `json:"id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Balance     int64      `json:"balance"`

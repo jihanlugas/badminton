@@ -1,6 +1,7 @@
 package gameplayer
 
 import (
+	"fmt"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
@@ -55,20 +56,22 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.Ga
 	var data []model.GameplayerView
 	var count int64
 
-	err = conn.Model(&data).
+	query := conn.Model(&data).
 		Where("gor_id LIKE ?", "%"+req.GorID+"%").
 		Where("player_id LIKE ?", "%"+req.PlayerID+"%").
-		Where("delete_dt IS NULL").
-		Count(&count).Error
+		Where("delete_dt IS NULL")
+
+	err = query.Count(&count).Error
 	if err != nil {
 		return data, count, err
 	}
 
-	err = conn.
-		Where("gor_id LIKE ?", "%"+req.GorID+"%").
-		Where("player_id LIKE ?", "%"+req.PlayerID+"%").
-		Where("delete_dt IS NULL").
-		Offset((req.GetPage() - 1) * req.GetLimit()).
+	if req.SortField != "" {
+		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
+	} else {
+		query = query.Order(fmt.Sprintf("%s %s", "name", "asc"))
+	}
+	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).
 		Find(&data).Error
 	if err != nil {

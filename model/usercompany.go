@@ -9,7 +9,7 @@ import (
 func (m *Usercompany) BeforeCreate(tx *gorm.DB) (err error) {
 	now := time.Now()
 
-	if m.ID != "" {
+	if m.ID == "" {
 		m.ID = utils.GetUniqueID()
 	}
 	m.CreateDt = now

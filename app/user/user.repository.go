@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"github.com/jihanlugas/badminton/utils"
@@ -31,21 +32,23 @@ func (r repository) Page(conn *gorm.DB, req *request.PageUser) ([]model.UserView
 	var data []model.UserView
 	var count int64
 
-	err = conn.Model(&data).
+	query := conn.Model(&data).
 		Where("email LIKE ?", "%"+req.Email+"%").
 		Where("username LIKE ?", "%"+req.Username+"%").
 		Where("no_hp LIKE ?", "%"+utils.FormatPhoneTo62(req.NoHp)+"%").
-		Where("delete_dt IS NULL").
-		Count(&count).Error
+		Where("delete_dt IS NULL")
+
+	err = query.Count(&count).Error
 	if err != nil {
 		return data, count, err
 	}
 
-	err = conn.Where("email LIKE ?", "%"+req.Email+"%").
-		Where("username LIKE ?", "%"+req.Username+"%").
-		Where("no_hp LIKE ?", "%"+utils.FormatPhoneTo62(req.NoHp)+"%").
-		Where("delete_dt IS NULL").
-		Offset((req.GetPage() - 1) * req.GetLimit()).
+	if req.SortField != "" {
+		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
+	} else {
+		query = query.Order(fmt.Sprintf("%s %s", "fullname", "asc"))
+	}
+	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).
 		Find(&data).Error
 	if err != nil {

@@ -301,21 +301,23 @@ func seed() {
 	}
 	tx.Create(&users)
 
-	//companies := []model.Company{
-	//	{
-	//		ID:          companyID,
-	//		Name:        "BTC Pekanbaru",
-	//		Description: "BTC Pekanbaru Company",
-	//		Balance:     0,
-	//		CreateBy:    userID,
-	//		CreateDt:    now,
-	//		UpdateBy:    userID,
-	//		UpdateDt:    now,
-	//		DeleteBy:    "",
-	//		DeleteDt:    nil,
-	//	},
-	//}
-	//tx.Create(&companies)
+	companies := []model.Company{
+		{Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "BTC Bandung", Description: "BTC Bandung Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Djarum", Description: "Persatuan Badminton Djarum", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Gudang Garam", Description: "Persatuan Badminton Gudang Garam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Sampurna", Description: "Persatuan Badminton Sampurna", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Blur", Description: "Persatuan Badminton Blur", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Panam", Description: "Persatuan Badminton Panam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Dragon Ball", Description: "Persatuan Badminton Dragon Ball", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Anak Mama", Description: "Persatuan Badminton Anak Mama", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Bangsa Panam", Description: "Persatuan Badminton Bangsa Panam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Dunia Sukses", Description: "Persatuan Badminton Dunia Sukses", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Cloudeka", Description: "Persatuan Badminton Cloudeka", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB New World", Description: "Persatuan Badminton New World", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{Name: "PB Konoha", Description: "Persatuan Badminton Konoha", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+	}
+	tx.Create(&companies)
 	//
 	//usercompanies := []model.Usercompany{
 	//	{
