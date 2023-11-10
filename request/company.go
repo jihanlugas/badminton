@@ -21,4 +21,5 @@ type PageCompany struct {
 	Paging
 	Name        string `json:"name" form:"name" query:"name"`
 	Description string `json:"description" form:"description" query:"description"`
+	CreateName  string `json:"createName" form:"createName" query:"createName"`
 }

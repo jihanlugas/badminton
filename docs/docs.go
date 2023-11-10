@@ -98,6 +98,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "createName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "description",
                         "in": "query"
                     },

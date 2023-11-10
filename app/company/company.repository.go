@@ -75,8 +75,9 @@ func (r repository) Page(conn *gorm.DB, req *request.PageCompany) ([]model.Compa
 	var count int64
 
 	query := conn.Model(&data).
-		Where("name LIKE ?", "%"+req.Name+"%").
-		Where("description LIKE ?", "%"+req.Description+"%").
+		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
+		Where("LOWER(description) LIKE LOWER(?)", "%"+req.Description+"%").
+		Where("LOWER(create_name) LIKE LOWER(?)", "%"+req.CreateName+"%").
 		Where("delete_dt IS NULL")
 
 	err = query.Count(&count).Error
