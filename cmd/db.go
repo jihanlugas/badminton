@@ -130,10 +130,13 @@ func up() {
 	}
 
 	vCompany := conn.Model(&model.Company{}).
-		Select("companies.*, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Select("companies.*, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name, count(g.id) as total_gor, count(p.id) as total_player").
 		Joins("left join users u1 on u1.id = companies.create_by").
 		Joins("left join users u2 on u2.id = companies.update_by").
-		Joins("left join users u3 on u3.id = companies.delete_by")
+		Joins("left join users u3 on u3.id = companies.delete_by").
+		Joins("left join gors g on g.company_id = companies.id and g.delete_dt is null").
+		Joins("left join players p on p.company_id = companies.id and p.delete_dt is null").
+		Group("companies.id, u1.id, u2.id, u3.id")
 
 	err = conn.Migrator().CreateView(model.VIEW_COMPANY, gorm.ViewOption{
 		Replace: true,
@@ -276,7 +279,8 @@ func seed() {
 	tx := conn.Begin()
 
 	userID := utils.GetUniqueID()
-	//companyID := utils.GetUniqueID()
+	btcCompanyID := utils.GetUniqueID()
+	blpCompanyID := utils.GetUniqueID()
 
 	users := []model.User{
 		{
@@ -302,7 +306,8 @@ func seed() {
 	tx.Create(&users)
 
 	companies := []model.Company{
-		{Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{ID: blpCompanyID, Name: "BLP Pekanbaru", Description: "BLP Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{ID: btcCompanyID, Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
 		{Name: "BTC Bandung", Description: "BTC Bandung Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
 		{Name: "PB Djarum", Description: "Persatuan Badminton Djarum", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
 		{Name: "PB Gudang Garam", Description: "Persatuan Badminton Gudang Garam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
@@ -318,7 +323,7 @@ func seed() {
 		{Name: "PB Konoha", Description: "Persatuan Badminton Konoha", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
 	}
 	tx.Create(&companies)
-	//
+
 	//usercompanies := []model.Usercompany{
 	//	{
 	//		UserID:           userID,
@@ -334,6 +339,13 @@ func seed() {
 	//	},
 	//}
 	//tx.Create(&usercompanies)
+
+	gors := []model.Gor{
+		{CompanyID: btcCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Gor PRS", Description: "Gor Panam Raya Square", Address: "Jl. HR. Subrantas", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+	}
+	tx.Create(&gors)
 
 	err = tx.Commit().Error
 	if err != nil {

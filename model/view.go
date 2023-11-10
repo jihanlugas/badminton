@@ -44,6 +44,8 @@ type CompanyView struct {
 	CreateName  string     `json:"createName"`
 	UpdateName  string     `json:"updateName"`
 	DeleteName  string     `json:"deleteName"`
+	TotalGor    int64      `json:"totalGor"`
+	TotalPlayer int64      `json:"totalPlayer"`
 }
 
 func (CompanyView) TableName() string {
