@@ -5,7 +5,6 @@ import (
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Repository interface {
@@ -28,7 +27,7 @@ func (r repository) GetById(conn *gorm.DB, id string) (model.Usercompany, error)
 	var err error
 	var data model.Usercompany
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -39,7 +38,6 @@ func (r repository) GetCreatorByCompanyId(conn *gorm.DB, companyID string) (mode
 	err = conn.
 		Where("company_id = ? ", companyID).
 		Where("is_creator = ? ", true).
-		Where("delete_dt IS NULL").
 		First(&data).Error
 	return data, err
 }
@@ -51,7 +49,6 @@ func (r repository) GetCompanyDefaultByUserId(conn *gorm.DB, userID string) (mod
 	err = conn.
 		Where("user_id = ? ", userID).
 		Where("is_default_company = ? ", true).
-		Where("delete_dt IS NULL").
 		First(&data).Error
 	return data, err
 }
@@ -60,7 +57,7 @@ func (r repository) GetViewById(conn *gorm.DB, id string) (model.UsercompanyView
 	var err error
 	var data model.UsercompanyView
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -71,7 +68,6 @@ func (r repository) GetViewCreatorByCompanyId(conn *gorm.DB, companyID string) (
 	err = conn.
 		Where("company_id = ? ", companyID).
 		Where("is_creator = ? ", true).
-		Where("delete_dt IS NULL").
 		First(&data).Error
 	return data, err
 }
@@ -83,7 +79,6 @@ func (r repository) GetViewCompanyDefaultByUserId(conn *gorm.DB, userID string) 
 	err = conn.
 		Where("user_id = ? ", userID).
 		Where("is_default_company = ? ", true).
-		Where("delete_dt IS NULL").
 		First(&data).Error
 	return data, err
 }
@@ -97,10 +92,7 @@ func (r repository) Update(conn *gorm.DB, data model.Usercompany) error {
 }
 
 func (r repository) Delete(conn *gorm.DB, data model.Usercompany) error {
-	now := time.Now()
-	data.DeleteDt = &now
-
-	return conn.Save(&data).Error
+	return conn.Delete(&data).Error
 }
 
 func (r repository) Page(conn *gorm.DB, req *request.PageUsercompany) ([]model.UsercompanyView, int64, error) {
@@ -110,8 +102,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageUsercompany) ([]model.U
 
 	query := conn.Model(&data).
 		Where("company_id LIKE ?", "%"+req.CompanyID+"%").
-		Where("user_id LIKE ?", "%"+req.UserID+"%").
-		Where("delete_dt IS NULL")
+		Where("user_id LIKE ?", "%"+req.UserID+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {

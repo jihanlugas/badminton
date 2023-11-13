@@ -5,7 +5,6 @@ import (
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Repository interface {
@@ -26,7 +25,7 @@ func (r repository) GetById(conn *gorm.DB, id string) (model.Company, error) {
 	var err error
 	var data model.Company
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -34,7 +33,7 @@ func (r repository) GetByName(conn *gorm.DB, name string) (model.Company, error)
 	var err error
 	var data model.Company
 
-	err = conn.Where("name = ? ", name).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("name = ? ", name).First(&data).Error
 	return data, err
 }
 
@@ -42,7 +41,7 @@ func (r repository) GetViewById(conn *gorm.DB, id string) (model.CompanyView, er
 	var err error
 	var data model.CompanyView
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -50,7 +49,7 @@ func (r repository) GetViewByName(conn *gorm.DB, name string) (model.CompanyView
 	var err error
 	var data model.CompanyView
 
-	err = conn.Where("name = ? ", name).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("name = ? ", name).First(&data).Error
 	return data, err
 }
 
@@ -63,10 +62,7 @@ func (r repository) Update(conn *gorm.DB, data model.Company) error {
 }
 
 func (r repository) Delete(conn *gorm.DB, data model.Company) error {
-	now := time.Now()
-	data.DeleteDt = &now
-
-	return conn.Save(&data).Error
+	return conn.Delete(&data).Error
 }
 
 func (r repository) Page(conn *gorm.DB, req *request.PageCompany) ([]model.CompanyView, int64, error) {
@@ -77,8 +73,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageCompany) ([]model.Compa
 	query := conn.Model(&data).
 		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
 		Where("LOWER(description) LIKE LOWER(?)", "%"+req.Description+"%").
-		Where("LOWER(create_name) LIKE LOWER(?)", "%"+req.CreateName+"%").
-		Where("delete_dt IS NULL")
+		Where("LOWER(create_name) LIKE LOWER(?)", "%"+req.CreateName+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {

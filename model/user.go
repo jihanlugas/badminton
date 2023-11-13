@@ -19,9 +19,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
-	if u.DeleteDt == nil {
-		now := time.Now()
-		u.UpdateDt = now
-	}
+	now := time.Now()
+	u.UpdateDt = now
 	return
 }

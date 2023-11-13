@@ -299,8 +299,6 @@ func seed() {
 			CreateDt:    now,
 			UpdateBy:    userID,
 			UpdateDt:    now,
-			DeleteBy:    "",
-			DeleteDt:    nil,
 		},
 	}
 	tx.Create(&users)

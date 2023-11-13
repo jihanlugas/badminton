@@ -18,9 +18,7 @@ func (m *Game) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (m *Game) BeforeUpdate(tx *gorm.DB) (err error) {
-	if m.DeleteDt == nil {
-		now := time.Now()
-		m.UpdateDt = now
-	}
+	now := time.Now()
+	m.UpdateDt = now
 	return
 }

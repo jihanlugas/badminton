@@ -23,7 +23,7 @@ func (r repository) GetById(conn *gorm.DB, id string) (model.Transaction, error)
 	var err error
 	var data model.Transaction
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -31,7 +31,7 @@ func (r repository) GetViewById(conn *gorm.DB, id string) (model.TransactionView
 	var err error
 	var data model.TransactionView
 
-	err = conn.Where("id = ? ", id).Where("delete_dt IS NULL").First(&data).Error
+	err = conn.Where("id = ? ", id).First(&data).Error
 	return data, err
 }
 
@@ -57,8 +57,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageTransaction) ([]model.T
 
 	query := conn.Model(&data).
 		Where("company_id LIKE ?", "%"+req.CompanyID+"%").
-		Where("name LIKE ?", "%"+req.Name+"%").
-		Where("delete_dt IS NULL")
+		Where("name LIKE ?", "%"+req.Name+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {
