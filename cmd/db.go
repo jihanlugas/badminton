@@ -130,13 +130,10 @@ func up() {
 	}
 
 	vCompany := conn.Model(&model.Company{}).
-		Select("companies.*, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name, count(g.id) as total_gor, count(p.id) as total_player").
+		Select("companies.*, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name, (select count(*) from gors g where g.company_id = companies.id and g.delete_dt is null) AS total_gor, (select count(*) from players p where p.company_id = companies.id and p.delete_dt is null) AS total_player").
 		Joins("left join users u1 on u1.id = companies.create_by").
 		Joins("left join users u2 on u2.id = companies.update_by").
-		Joins("left join users u3 on u3.id = companies.delete_by").
-		Joins("left join gors g on g.company_id = companies.id and g.delete_dt is null").
-		Joins("left join players p on p.company_id = companies.id and p.delete_dt is null").
-		Group("companies.id, u1.id, u2.id, u3.id")
+		Joins("left join users u3 on u3.id = companies.delete_by")
 
 	err = conn.Migrator().CreateView(model.VIEW_COMPANY, gorm.ViewOption{
 		Replace: true,
@@ -337,6 +334,17 @@ func seed() {
 	//	},
 	//}
 	//tx.Create(&usercompanies)
+
+	players := []model.Player{
+		{CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+	}
+	tx.Create(&players)
 
 	gors := []model.Gor{
 		{CompanyID: btcCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
