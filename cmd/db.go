@@ -336,13 +336,13 @@ func seed() {
 	//tx.Create(&usercompanies)
 
 	players := []model.Player{
-		{CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: "", Address: "", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: utils.FormatPhoneTo62("08123456789"), Address: "Fusha Mura", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: utils.FormatPhoneTo62("08123456777"), Address: "Jl. Kehidupan", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: utils.FormatPhoneTo62("08123456779"), Address: "Jl. Perkara", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: utils.FormatPhoneTo62("08128856789"), Address: "Jl. Buntu", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: utils.FormatPhoneTo62("08124556789"), Address: "Jl. Bangka", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: utils.FormatPhoneTo62("08123457689"), Address: "Jl. Permasalahan", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
 	}
 	tx.Create(&players)
 

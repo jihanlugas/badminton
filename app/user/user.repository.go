@@ -32,9 +32,9 @@ func (r repository) Page(conn *gorm.DB, req *request.PageUser) ([]model.UserView
 	var count int64
 
 	query := conn.Model(&data).
-		Where("email LIKE ?", "%"+req.Email+"%").
-		Where("username LIKE ?", "%"+req.Username+"%").
-		Where("no_hp LIKE ?", "%"+utils.FormatPhoneTo62(req.NoHp)+"%")
+		Where("LOWER(email) LIKE LOWER(?)", "%"+req.Email+"%").
+		Where("LOWER(username) LIKE LOWER(?)", "%"+req.Username+"%").
+		Where("LOWER(no_hp) LIKE LOWER(?)", "%"+utils.FormatPhoneTo62(req.NoHp)+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {

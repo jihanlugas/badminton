@@ -56,8 +56,8 @@ func (r repository) Page(conn *gorm.DB, req *request.PageTransaction) ([]model.T
 	var count int64
 
 	query := conn.Model(&data).
-		Where("company_id LIKE ?", "%"+req.CompanyID+"%").
-		Where("name LIKE ?", "%"+req.Name+"%")
+		Where("LOWER(company_id) LIKE LOWER(?)", "%"+req.CompanyID+"%").
+		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {

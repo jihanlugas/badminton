@@ -53,11 +53,11 @@ func (r repository) Page(conn *gorm.DB, req *request.PagePlayer) ([]model.Player
 	var count int64
 
 	query := conn.Model(&data).
-		Where("company_id LIKE ?", "%"+req.CompanyID+"%").
-		Where("name LIKE ?", "%"+req.Name+"%").
-		Where("email LIKE ?", "%"+req.Email+"%").
-		Where("no_hp LIKE ?", "%"+req.NoHp+"%").
-		Where("address LIKE ?", "%"+req.Address+"%")
+		Where("LOWER(company_id) LIKE (?)", "%"+req.CompanyID+"%").
+		Where("LOWER(name) LIKE (?)", "%"+req.Name+"%").
+		Where("LOWER(email) LIKE (?)", "%"+req.Email+"%").
+		Where("LOWER(no_hp) LIKE (?)", "%"+req.NoHp+"%").
+		Where("LOWER(address) LIKE (?)", "%"+req.Address+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {

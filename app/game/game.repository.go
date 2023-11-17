@@ -53,9 +53,9 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGame) ([]model.GameView
 	var count int64
 
 	query := conn.Model(&data).
-		Where("gor_id LIKE ?", "%"+req.GorID+"%").
-		Where("name LIKE ?", "%"+req.Name+"%").
-		Where("description LIKE ?", "%"+req.Description+"%")
+		Where("LOWER(gor_id) LIKE LOWER(?)", "%"+req.GorID+"%").
+		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
+		Where("LOWER(description) LIKE LOWER(?)", "%"+req.Description+"%")
 
 	err = query.Count(&count).Error
 	if err != nil {
