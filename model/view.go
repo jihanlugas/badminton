@@ -149,6 +149,7 @@ type PlayerView struct {
 	Email       string         `json:"email"`
 	NoHp        string         `json:"noHp"`
 	Address     string         `json:"address"`
+	Gender      string         `json:"gender"`
 	IsActive    bool           `json:"isActive"`
 	PhotoID     string         `json:"photoId"`
 	CreateBy    string         `json:"createBy"`

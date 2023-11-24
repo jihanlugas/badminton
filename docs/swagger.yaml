@@ -110,6 +110,11 @@ definitions:
         type: string
       email:
         type: string
+      gender:
+        enum:
+        - MALE
+        - FEMALE
+        type: string
       isActive:
         type: boolean
       name:
@@ -244,6 +249,11 @@ definitions:
       companyId:
         type: string
       email:
+        type: string
+      gender:
+        enum:
+        - MALE
+        - FEMALE
         type: string
       isActive:
         type: boolean
@@ -1008,6 +1018,9 @@ paths:
         type: string
       - in: query
         name: email
+        type: string
+      - in: query
+        name: gender
         type: string
       - in: query
         name: limit

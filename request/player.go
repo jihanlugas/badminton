@@ -6,6 +6,7 @@ type CreatePlayer struct {
 	Email     string `json:"email" validate:""`
 	NoHp      string `json:"noHp" validate:""`
 	Address   string `json:"address" validate:""`
+	Gender    string `json:"gender" validate:"oneof='MALE' 'FEMALE'"`
 	IsActive  bool   `json:"isActive" validate:""`
 }
 
@@ -15,6 +16,7 @@ type UpdatePlayer struct {
 	Email     string `json:"email" validate:""`
 	NoHp      string `json:"noHp" validate:""`
 	Address   string `json:"address" validate:""`
+	Gender    string `json:"gender" validate:"oneof='MALE' 'FEMALE'"`
 	IsActive  bool   `json:"isActive" validate:""`
 }
 
@@ -24,5 +26,6 @@ type PagePlayer struct {
 	Name      string `json:"name" form:"name" query:"name" `
 	Email     string `json:"email" form:"email" query:"email" `
 	NoHp      string `json:"noHp" form:"noHp" query:"noHp" `
-	Address   string `json:"address" form:"address" query:"address" `
+	Address   string `json:"address" form:"address" query:"address"`
+	Gender    string `json:"gender" form:"gender" query:"gender"`
 }

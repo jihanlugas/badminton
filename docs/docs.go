@@ -1072,6 +1072,11 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "gender",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "name": "limit",
                         "in": "query"
@@ -1940,6 +1945,13 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "MALE",
+                        "FEMALE"
+                    ]
+                },
                 "isActive": {
                     "type": "boolean"
                 },
@@ -2137,6 +2149,13 @@ const docTemplate = `{
                 },
                 "email": {
                     "type": "string"
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "MALE",
+                        "FEMALE"
+                    ]
                 },
                 "isActive": {
                     "type": "boolean"

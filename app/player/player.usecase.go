@@ -40,6 +40,7 @@ func (u usecasePlayer) Create(loginUser jwt.UserLogin, req *request.CreatePlayer
 		Email:     req.Email,
 		NoHp:      req.NoHp,
 		Address:   req.Address,
+		Gender:    req.Gender,
 		IsActive:  req.IsActive,
 		CreateBy:  loginUser.UserID,
 		UpdateBy:  loginUser.UserID,
@@ -79,6 +80,7 @@ func (u usecasePlayer) Update(loginUser jwt.UserLogin, id string, req *request.U
 	data.Email = req.Email
 	data.NoHp = req.NoHp
 	data.Address = req.Address
+	data.Gender = req.Gender
 	data.IsActive = req.IsActive
 	data.UpdateBy = loginUser.UserID
 

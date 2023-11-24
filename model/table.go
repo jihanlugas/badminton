@@ -69,6 +69,7 @@ type Player struct {
 	Email     string         `gorm:"not null" json:"email"`
 	NoHp      string         `gorm:"not null" json:"noHp"`
 	Address   string         `gorm:"not null" json:"address"`
+	Gender    string         `gorm:"not null" json:"gender"`
 	IsActive  bool           `gorm:"not null" json:"isActive"`
 	PhotoID   string         `gorm:"not null" json:"photoId"`
 	CreateBy  string         `gorm:"not null" json:"createBy"`

@@ -8,7 +8,6 @@ import (
 	"github.com/jihanlugas/badminton/utils"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
-	"time"
 )
 
 var dbCmd = &cobra.Command{
@@ -264,7 +263,7 @@ func down() {
 }
 
 func seed() {
-	now := time.Now()
+	//now := time.Now()
 	password, err := cryption.EncryptAES64("123456")
 	if err != nil {
 		panic(err)
@@ -276,80 +275,60 @@ func seed() {
 	tx := conn.Begin()
 
 	userID := utils.GetUniqueID()
+	btcUserID := utils.GetUniqueID()
+	blpUserID := utils.GetUniqueID()
 	btcCompanyID := utils.GetUniqueID()
 	blpCompanyID := utils.GetUniqueID()
 
 	users := []model.User{
-		{
-			ID:          userID,
-			Role:        constant.RoleAdmin,
-			Email:       "jihanlugas2@gmail.com",
-			Username:    "jihanlugas",
-			NoHp:        "6287770333043",
-			Fullname:    "Jihan Lugas",
-			Passwd:      password,
-			PassVersion: 1,
-			IsActive:    true,
-			PhotoID:     "",
-			LastLoginDt: nil,
-			CreateBy:    userID,
-			CreateDt:    now,
-			UpdateBy:    userID,
-			UpdateDt:    now,
-		},
+		{ID: userID, Role: constant.RoleAdmin, Email: "jihanlugas2@gmail.com", Username: "jihanlugas", NoHp: "6287770333043", Fullname: "Jihan Lugas", Passwd: password, PassVersion: 1, IsActive: true, PhotoID: "", LastLoginDt: nil, CreateBy: userID, UpdateBy: userID},
+		{ID: btcUserID, Role: constant.RoleUser, Email: "adminbtc@gmail.com", Username: "adminbtc", NoHp: "6287770331234", Fullname: "Admin BTC", Passwd: password, PassVersion: 1, IsActive: true, PhotoID: "", LastLoginDt: nil, CreateBy: userID, UpdateBy: userID},
+		{ID: blpUserID, Role: constant.RoleUser, Email: "adminblp@gmail.com", Username: "adminblp", NoHp: "6287770335678", Fullname: "Admin BLP", Passwd: password, PassVersion: 1, IsActive: true, PhotoID: "", LastLoginDt: nil, CreateBy: userID, UpdateBy: userID},
 	}
 	tx.Create(&users)
 
 	companies := []model.Company{
-		{ID: blpCompanyID, Name: "BLP Pekanbaru", Description: "BLP Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{ID: btcCompanyID, Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "BTC Bandung", Description: "BTC Bandung Company", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Djarum", Description: "Persatuan Badminton Djarum", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Gudang Garam", Description: "Persatuan Badminton Gudang Garam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Sampurna", Description: "Persatuan Badminton Sampurna", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Blur", Description: "Persatuan Badminton Blur", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Panam", Description: "Persatuan Badminton Panam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Dragon Ball", Description: "Persatuan Badminton Dragon Ball", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Anak Mama", Description: "Persatuan Badminton Anak Mama", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Bangsa Panam", Description: "Persatuan Badminton Bangsa Panam", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Dunia Sukses", Description: "Persatuan Badminton Dunia Sukses", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Cloudeka", Description: "Persatuan Badminton Cloudeka", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB New World", Description: "Persatuan Badminton New World", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{Name: "PB Konoha", Description: "Persatuan Badminton Konoha", Balance: 0, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{ID: blpCompanyID, Name: "BLP Pekanbaru", Description: "BLP Pekanbaru Company", Balance: 100000, CreateBy: userID, UpdateBy: userID},
+		{ID: btcCompanyID, Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 50000, CreateBy: userID, UpdateBy: userID},
+		{Name: "BTC Bandung", Description: "BTC Bandung Company", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Djarum", Description: "Persatuan Badminton Djarum", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Gudang Garam", Description: "Persatuan Badminton Gudang Garam", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Sampurna", Description: "Persatuan Badminton Sampurna", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Blur", Description: "Persatuan Badminton Blur", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Panam", Description: "Persatuan Badminton Panam", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Dragon Ball", Description: "Persatuan Badminton Dragon Ball", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Anak Mama", Description: "Persatuan Badminton Anak Mama", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Bangsa Panam", Description: "Persatuan Badminton Bangsa Panam", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Dunia Sukses", Description: "Persatuan Badminton Dunia Sukses", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Cloudeka", Description: "Persatuan Badminton Cloudeka", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB New World", Description: "Persatuan Badminton New World", Balance: 0, CreateBy: userID, UpdateBy: userID},
+		{Name: "PB Konoha", Description: "Persatuan Badminton Konoha", Balance: 0, CreateBy: userID, UpdateBy: userID},
 	}
 	tx.Create(&companies)
 
-	//usercompanies := []model.Usercompany{
-	//	{
-	//		UserID:           userID,
-	//		CompanyID:        companyID,
-	//		IsDefaultCompany: true,
-	//		IsCreator:        true,
-	//		CreateBy:         userID,
-	//		CreateDt:         now,
-	//		UpdateBy:         userID,
-	//		UpdateDt:         now,
-	//		DeleteBy:         "",
-	//		DeleteDt:         nil,
-	//	},
-	//}
-	//tx.Create(&usercompanies)
+	usercompanies := []model.Usercompany{
+		{UserID: blpUserID, CompanyID: blpCompanyID, IsDefaultCompany: true, IsCreator: true, CreateBy: userID, UpdateBy: userID},
+		{UserID: btcUserID, CompanyID: btcCompanyID, IsDefaultCompany: true, IsCreator: true, CreateBy: userID, UpdateBy: userID},
+	}
+	tx.Create(&usercompanies)
 
 	players := []model.Player{
-		{CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: utils.FormatPhoneTo62("08123456789"), Address: "Fusha Mura", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: utils.FormatPhoneTo62("08123456777"), Address: "Jl. Kehidupan", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: utils.FormatPhoneTo62("08123456779"), Address: "Jl. Perkara", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: utils.FormatPhoneTo62("08128856789"), Address: "Jl. Buntu", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: utils.FormatPhoneTo62("08124556789"), Address: "Jl. Bangka", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: utils.FormatPhoneTo62("08123457689"), Address: "Jl. Permasalahan", IsActive: true, PhotoID: "", CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: utils.FormatPhoneTo62("08123456789"), Address: "Fusha Mura", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: utils.FormatPhoneTo62("08123456777"), Address: "Jl. Kehidupan", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: utils.FormatPhoneTo62("08123456779"), Address: "Jl. Perkara", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Nico Robin", Email: "robin@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Tersesat", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Nami", Email: "nami@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: utils.FormatPhoneTo62("08128856789"), Address: "Jl. Buntu", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: utils.FormatPhoneTo62("08124556789"), Address: "Jl. Bangka", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: utils.FormatPhoneTo62("08123457689"), Address: "Jl. Permasalahan", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 	}
 	tx.Create(&players)
 
 	gors := []model.Gor{
-		{CompanyID: btcCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: btcCompanyID, Name: "Gor PRS", Description: "Gor Panam Raya Square", Address: "Jl. HR. Subrantas", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
-		{CompanyID: blpCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, CreateDt: now, UpdateBy: userID, UpdateDt: now},
+		{CompanyID: btcCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Gor PRS", Description: "Gor Panam Raya Square", Address: "Jl. HR. Subrantas", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, UpdateBy: userID},
+		{CompanyID: blpCompanyID, Name: "Gor Wahyu", Description: "Gor Wahyu Gobah", Address: "Jl. Sumatra", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, CreateBy: userID, UpdateBy: userID},
 	}
 	tx.Create(&gors)
 

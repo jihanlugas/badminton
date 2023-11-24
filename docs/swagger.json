@@ -1065,6 +1065,11 @@
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "gender",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "name": "limit",
                         "in": "query"
@@ -1933,6 +1938,13 @@
                 "email": {
                     "type": "string"
                 },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "MALE",
+                        "FEMALE"
+                    ]
+                },
                 "isActive": {
                     "type": "boolean"
                 },
@@ -2130,6 +2142,13 @@
                 },
                 "email": {
                     "type": "string"
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "MALE",
+                        "FEMALE"
+                    ]
                 },
                 "isActive": {
                     "type": "boolean"
