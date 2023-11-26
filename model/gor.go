@@ -18,7 +18,13 @@ func (m *Gor) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (m *Gor) BeforeUpdate(tx *gorm.DB) (err error) {
-	now := time.Now()
-	m.UpdateDt = now
+	if m.DeleteBy == "" {
+		now := time.Now()
+		m.UpdateDt = now
+	}
 	return
+}
+
+func (m *Gor) BeforeDelete(tx *gorm.DB) (err error) {
+	return tx.Save(m).Error
 }

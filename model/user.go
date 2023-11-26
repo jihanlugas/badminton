@@ -6,20 +6,26 @@ import (
 	"time"
 )
 
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *User) BeforeCreate(tx *gorm.DB) (err error) {
 	now := time.Now()
 
-	if u.ID == "" {
-		u.ID = utils.GetUniqueID()
+	if m.ID == "" {
+		m.ID = utils.GetUniqueID()
 	}
 
-	u.CreateDt = now
-	u.UpdateDt = now
+	m.CreateDt = now
+	m.UpdateDt = now
 	return
 }
 
-func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
-	now := time.Now()
-	u.UpdateDt = now
+func (m *User) BeforeUpdate(tx *gorm.DB) (err error) {
+	if m.DeleteBy == "" {
+		now := time.Now()
+		m.UpdateDt = now
+	}
 	return
+}
+
+func (m *User) BeforeDelete(tx *gorm.DB) (err error) {
+	return tx.Save(m).Error
 }

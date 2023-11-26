@@ -1,7 +1,9 @@
 package player
 
 import (
+	"errors"
 	"github.com/jihanlugas/badminton/app/jwt"
+	"github.com/jihanlugas/badminton/constant"
 	"github.com/jihanlugas/badminton/db"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
@@ -33,6 +35,12 @@ func (u usecasePlayer) GetById(id string) (model.PlayerView, error) {
 func (u usecasePlayer) Create(loginUser jwt.UserLogin, req *request.CreatePlayer) error {
 	var err error
 	var data model.Player
+
+	if loginUser.Role != constant.RoleAdmin {
+		if req.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
 
 	data = model.Player{
 		CompanyID: req.CompanyID,
@@ -66,6 +74,12 @@ func (u usecasePlayer) Create(loginUser jwt.UserLogin, req *request.CreatePlayer
 
 func (u usecasePlayer) Update(loginUser jwt.UserLogin, id string, req *request.UpdatePlayer) error {
 	var err error
+
+	if loginUser.Role != constant.RoleAdmin {
+		if req.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
 
 	conn, closeConn := db.GetConnection()
 	defer closeConn()
@@ -108,6 +122,12 @@ func (u usecasePlayer) Delete(loginUser jwt.UserLogin, id string) error {
 	data, err := u.repo.GetById(conn, id)
 	if err != nil {
 		return err
+	}
+
+	if loginUser.Role != constant.RoleAdmin {
+		if data.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
 	}
 
 	data.DeleteBy = loginUser.UserID

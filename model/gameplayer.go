@@ -18,7 +18,13 @@ func (m *Gameplayer) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (m *Gameplayer) BeforeUpdate(tx *gorm.DB) (err error) {
-	now := time.Now()
-	m.UpdateDt = now
+	if m.DeleteBy == "" {
+		now := time.Now()
+		m.UpdateDt = now
+	}
 	return
+}
+
+func (m *Gameplayer) BeforeDelete(tx *gorm.DB) (err error) {
+	return tx.Save(m).Error
 }

@@ -124,9 +124,9 @@ func existsDataOnDbTable(fl validator.FieldLevel) bool {
 	var err error
 	params := strings.Fields(fl.Param())
 
-	if fl.Field().Int() == 0 {
-		return true
-	}
+	//if fl.Field().Int() == 0 {
+	//	return true
+	//}
 
 	companyRepo := company.NewRepository()
 	userRepo := user.NewRepository()
@@ -155,104 +155,6 @@ func existsDataOnDbTable(fl validator.FieldLevel) bool {
 			return false
 		}
 		return true
-		//case "election_id":
-		//	electionID := fl.Field().Int()
-		//	if electionID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.election WHERE election_id=$1`, electionID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "province_id":
-		//	provinceID := fl.Field().Int()
-		//	if provinceID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.province WHERE province_id=$1`, provinceID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "regency_id":
-		//	regencyID := fl.Field().Int()
-		//	if regencyID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.regency WHERE regency_id=$1`, regencyID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "districtdapil_id":
-		//	districtdapilID := fl.Field().Int()
-		//	if districtdapilID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.districtdapil WHERE districtdapil_id=$1`, districtdapilID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "district_id":
-		//	districtID := fl.Field().Int()
-		//	if districtID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.district WHERE district_id=$1`, districtID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "village_id":
-		//	villageID := fl.Field().Int()
-		//	if villageID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.village WHERE village_id=$1`, villageID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
-		//case "tps_id":
-		//	tpsID := fl.Field().Int()
-		//	if tpsID == 0 {
-		//		return true
-		//	}
-		//	conn, ctx, closeConn := db.GetConnection()
-		//	defer closeConn()
-		//
-		//	var cnt int
-		//	row := conn.QueryRow(ctx, `SELECT count(*) FROM public.tps WHERE tps_id=$1`, tpsID)
-		//	if err = row.Scan(&cnt); err != nil {
-		//		return false
-		//	}
-		//	return cnt != 0
 	}
 	return false
 }
