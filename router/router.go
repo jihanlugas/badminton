@@ -63,7 +63,7 @@ func Init() *echo.Echo {
 	router.GET("/", app.Ping)
 
 	router.POST("/sign-in", authenticationHandler.SignIn)
-	//router.GET("/sign-out", authenticationHandler.SignOut)
+	router.GET("/sign-out", authenticationHandler.SignOut)
 	//router.POST("/sign-up", authenticationHandler.SignUp)
 	router.GET("/refresh-token", authenticationHandler.RefreshToken, checkTokenAdminMiddleware)
 	router.GET("/init", authenticationHandler.Init, checkTokenMiddleware)

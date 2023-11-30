@@ -15,11 +15,11 @@ import (
 )
 
 type UserLogin struct {
-	UserID        string
-	Role          string
-	PassVersion   int
-	CompanyID     string
-	UsercompanyID string
+	UserID        string `json:"userId"`
+	Role          string `json:"role"`
+	PassVersion   int    `json:"passVersion"`
+	CompanyID     string `json:"companyId"`
+	UsercompanyID string `json:"usercompanyId"`
 }
 
 func GetUserLoginInfo(c echo.Context) (UserLogin, error) {

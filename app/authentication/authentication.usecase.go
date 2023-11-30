@@ -17,7 +17,7 @@ import (
 )
 
 type AuthenticationUsecase interface {
-	SignIn(req *request.Signin) (string, error)
+	SignIn(req *request.Signin) (string, jwt.UserLogin, error)
 	RefreshToken(loginUser jwt.UserLogin) (string, error)
 	Init(loginUser jwt.UserLogin) (*model.UserView, *model.CompanyView, error)
 }
@@ -29,7 +29,7 @@ type usecaseAuthentication struct {
 	usercompanyRepo usercompany.Repository
 }
 
-func (u usecaseAuthentication) SignIn(req *request.Signin) (string, error) {
+func (u usecaseAuthentication) SignIn(req *request.Signin) (string, jwt.UserLogin, error) {
 	var err error
 	var data model.User
 	var companydata model.Company
@@ -46,27 +46,27 @@ func (u usecaseAuthentication) SignIn(req *request.Signin) (string, error) {
 	}
 
 	if err != nil {
-		return "", err
+		return "", userLogin, err
 	}
 
 	err = cryption.CheckAES64(req.Passwd, data.Passwd)
 	if err != nil {
-		return "", errors.New("invalid username or password")
+		return "", userLogin, errors.New("invalid username or password")
 	}
 
 	if !data.IsActive {
-		return "", errors.New("user not active")
+		return "", userLogin, errors.New("user not active")
 	}
 
 	if data.Role != constant.RoleAdmin {
 		usercompanydata, err = u.usercompanyRepo.GetCompanyDefaultByUserId(conn, data.ID)
 		if err != nil {
-			return "", errors.New("usercompany not found : " + err.Error())
+			return "", userLogin, errors.New("usercompany not found : " + err.Error())
 		}
 
 		companydata, err = u.companyRepo.GetById(conn, usercompanydata.CompanyID)
 		if err != nil {
-			return "", errors.New("company not found : " + err.Error())
+			return "", userLogin, errors.New("company not found : " + err.Error())
 		}
 	}
 
@@ -77,12 +77,12 @@ func (u usecaseAuthentication) SignIn(req *request.Signin) (string, error) {
 	data.UpdateBy = data.ID
 	err = u.userRepo.Update(tx, data)
 	if err != nil {
-		return "", err
+		return "", userLogin, err
 	}
 
 	err = tx.Commit().Error
 	if err != nil {
-		return "", err
+		return "", userLogin, err
 	}
 
 	expiredAt := time.Now().Add(time.Hour * time.Duration(config.AuthTokenExpiredHour))
@@ -94,10 +94,10 @@ func (u usecaseAuthentication) SignIn(req *request.Signin) (string, error) {
 	userLogin.UsercompanyID = usercompanydata.ID
 	token, err := jwt.CreateToken(userLogin, expiredAt)
 	if err != nil {
-		return "", err
+		return "", userLogin, err
 	}
 
-	return token, err
+	return token, userLogin, err
 }
 
 func (u usecaseAuthentication) RefreshToken(loginUser jwt.UserLogin) (string, error) {

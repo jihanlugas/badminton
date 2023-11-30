@@ -39,13 +39,14 @@ func (h AuthenticationHandler) SignIn(c echo.Context) error {
 		return response.Error(http.StatusBadRequest, err.Error(), response.ValidationError(err)).SendJSON(c)
 	}
 
-	token, err := h.usecase.SignIn(req)
+	token, userLogin, err := h.usecase.SignIn(req)
 	if err != nil {
 		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
 	}
 
 	return response.Success(http.StatusOK, "success", response.Payload{
-		"token": token,
+		"token":     token,
+		"userLogin": userLogin,
 	}).SendJSON(c)
 }
 
