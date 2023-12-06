@@ -187,7 +187,8 @@ func up() {
 	}
 
 	vGame := conn.Model(&model.Game{}).
-		Select("games.*, gors.name as gor_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Select("games.*, companies.name as company_name, gors.name as gor_name, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
+		Joins("left join companies companies on companies.id = games.company_id").
 		Joins("left join gors gors on gors.id = games.gor_id").
 		Joins("left join users u1 on u1.id = games.create_by").
 		Joins("left join users u2 on u2.id = games.update_by").

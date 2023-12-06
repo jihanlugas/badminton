@@ -41,6 +41,8 @@ func (u usecaseGame) Create(loginUser jwt.UserLogin, req *request.CreateGame) er
 		NormalGamePrice: req.NormalGamePrice,
 		RubberGamePrice: req.RubberGamePrice,
 		BallPrice:       req.BallPrice,
+		GameDt:          req.GameDt,
+		IsFinish:        req.IsFinish,
 		CreateBy:        loginUser.UserID,
 		UpdateBy:        loginUser.UserID,
 	}
@@ -80,6 +82,8 @@ func (u usecaseGame) Update(loginUser jwt.UserLogin, id string, req *request.Upd
 	data.NormalGamePrice = req.NormalGamePrice
 	data.RubberGamePrice = req.RubberGamePrice
 	data.BallPrice = req.BallPrice
+	data.GameDt = req.GameDt
+	data.IsFinish = req.IsFinish
 	data.UpdateBy = loginUser.UserID
 
 	tx := conn.Begin()

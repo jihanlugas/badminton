@@ -56,6 +56,8 @@ definitions:
         type: string
       gorId:
         type: string
+      isFinish:
+        type: boolean
       name:
         type: string
       normalGamePrice:
@@ -196,6 +198,8 @@ definitions:
         type: string
       gorId:
         type: string
+      isFinish:
+        type: boolean
       name:
         type: string
       normalGamePrice:

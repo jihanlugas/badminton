@@ -1864,6 +1864,9 @@ const docTemplate = `{
                 "gorId": {
                     "type": "string"
                 },
+                "isFinish": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -2068,6 +2071,9 @@ const docTemplate = `{
                 },
                 "gorId": {
                     "type": "string"
+                },
+                "isFinish": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

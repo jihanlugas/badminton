@@ -15,3 +15,7 @@ reset-db:
 	go run main.go db down
 	go run main.go db up
 	go run main.go db seed
+
+build :
+	go build -o ./bin/main main.go
+	cp .env ./bin/.env

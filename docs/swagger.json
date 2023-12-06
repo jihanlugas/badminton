@@ -1857,6 +1857,9 @@
                 "gorId": {
                     "type": "string"
                 },
+                "isFinish": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -2061,6 +2064,9 @@
                 },
                 "gorId": {
                     "type": "string"
+                },
+                "isFinish": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

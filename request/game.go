@@ -10,6 +10,7 @@ type CreateGame struct {
 	RubberGamePrice int64     `json:"rubberGamePrice" validate:""`
 	BallPrice       int64     `json:"ballPrice" validate:""`
 	GameDt          time.Time `json:"gameDt" validate:""`
+	IsFinish        bool      `json:"isFinish" validate:""`
 }
 
 type UpdateGame struct {
@@ -20,6 +21,7 @@ type UpdateGame struct {
 	RubberGamePrice int64     `json:"rubberGamePrice" validate:""`
 	BallPrice       int64     `json:"ballPrice" validate:""`
 	GameDt          time.Time `json:"gameDt" validate:""`
+	IsFinish        bool      `json:"isFinish" validate:""`
 }
 
 type PageGame struct {

@@ -91,6 +91,7 @@ entity "gors" <<(P,LightGreen)>> {
 entity "games" <<(P,LightGreen)>> {
     id: type(varchar) [PK]
     --
+    company_id: type(varchar)
     gor_id: type(varchar)
     name: type(varchar)
     description: type(varchar)
@@ -133,6 +134,46 @@ entity "transactions" <<(P,LightGreen)>> {
     create_dt: type(timestampTz)
 }
 
+entity "gamematchs" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    company_id: type(varchar)
+    game_id: type(varchar)
+    name: type(varchar)
+    left_team_id: type(varchar)
+    right_team_id: type(varchar)
+    left_point: type(int)
+    right_point: type(int)
+    is_rubber: type(bool)
+}
+
+entity "gamematchteams" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    game_id: type(varchar)
+    gamematch_id: type(varchar)
+    name: type(varchar)
+}
+
+entity "gamematchteamplayers" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    game_id: type(varchar)
+    gamematch_id: type(varchar)
+    gamematchteam_id: type(varchar)
+    player_id: type(varchar)
+}
+
+entity "gamematchscores" <<(P,LightGreen)>> {
+    id: type(varchar) [PK]
+    --
+    game_id: type(varchar)
+    gamematch_id: type(varchar)
+    set: type(int)
+    left_score: type(int)
+    right_score: type(int)
+}
+
 users --{ usercompanies
 companies --{ usercompanies
 companies --{ gors
@@ -140,6 +181,11 @@ companies --{ players
 gors --{ games
 games --{ gameplayers
 players --{ gameplayers
+games --{ gamematchs
+gamematchs --{ gamematchteams
+gamematchs --{ gamematchscores
+gamematchteams --{ gamematchteamplayers
+players --{ gamematchteamplayers
 
 
 @enduml
