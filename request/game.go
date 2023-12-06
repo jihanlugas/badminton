@@ -3,6 +3,7 @@ package request
 import "time"
 
 type CreateGame struct {
+	CompanyID       string    `json:"companyId" validate:"required"`
 	GorID           string    `json:"gorId" validate:"required"`
 	Name            string    `json:"name" validate:"required"`
 	Description     string    `json:"description" validate:""`
@@ -14,6 +15,7 @@ type CreateGame struct {
 }
 
 type UpdateGame struct {
+	CompanyID       string    `json:"companyId" validate:"required"`
 	GorID           string    `json:"gorId" validate:"required"`
 	Name            string    `json:"name" validate:"required"`
 	Description     string    `json:"description" validate:""`

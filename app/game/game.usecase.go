@@ -1,7 +1,9 @@
 package game
 
 import (
+	"errors"
 	"github.com/jihanlugas/badminton/app/jwt"
+	"github.com/jihanlugas/badminton/constant"
 	"github.com/jihanlugas/badminton/db"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
@@ -33,6 +35,12 @@ func (u usecaseGame) GetById(id string) (model.GameView, error) {
 func (u usecaseGame) Create(loginUser jwt.UserLogin, req *request.CreateGame) error {
 	var err error
 	var data model.Game
+
+	if loginUser.Role != constant.RoleAdmin {
+		if req.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
 
 	data = model.Game{
 		GorID:           req.GorID,
@@ -67,6 +75,12 @@ func (u usecaseGame) Create(loginUser jwt.UserLogin, req *request.CreateGame) er
 
 func (u usecaseGame) Update(loginUser jwt.UserLogin, id string, req *request.UpdateGame) error {
 	var err error
+
+	if loginUser.Role != constant.RoleAdmin {
+		if req.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
 
 	conn, closeConn := db.GetConnection()
 	defer closeConn()
