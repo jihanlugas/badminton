@@ -11,6 +11,7 @@ type Repository interface {
 	GetById(conn *gorm.DB, id string) (model.Gameplayer, error)
 	GetViewById(conn *gorm.DB, id string) (model.GameplayerView, error)
 	Create(conn *gorm.DB, data model.Gameplayer) error
+	CreateBulk(conn *gorm.DB, data []model.Gameplayer) error
 	Update(conn *gorm.DB, data model.Gameplayer) error
 	Delete(conn *gorm.DB, data model.Gameplayer) error
 	Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.GameplayerView, int64, error)
@@ -39,6 +40,10 @@ func (r repository) Create(conn *gorm.DB, data model.Gameplayer) error {
 	return conn.Create(&data).Error
 }
 
+func (r repository) CreateBulk(conn *gorm.DB, data []model.Gameplayer) error {
+	return conn.Create(&data).Error
+}
+
 func (r repository) Update(conn *gorm.DB, data model.Gameplayer) error {
 	return conn.Save(&data).Error
 }
@@ -53,7 +58,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.Ga
 	var count int64
 
 	query := conn.Model(&data).
-		Where("gor_id LIKE ?", "%"+req.GorID+"%").
+		Where("game_id LIKE ?", "%"+req.GameID+"%").
 		Where("player_id LIKE ?", "%"+req.PlayerID+"%")
 
 	err = query.Count(&count).Error
@@ -64,7 +69,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.Ga
 	if req.SortField != "" {
 		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
 	} else {
-		query = query.Order(fmt.Sprintf("%s %s", "name", "asc"))
+		query = query.Order(fmt.Sprintf("%s %s", "create_dt", "asc"))
 	}
 	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).

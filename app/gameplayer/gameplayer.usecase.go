@@ -10,6 +10,7 @@ import (
 type Usecase interface {
 	GetById(id string) (model.GameplayerView, error)
 	Create(loginUser jwt.UserLogin, req *request.CreateGameplayer) error
+	CreateBulk(loginUser jwt.UserLogin, req *request.CreateBulkGameplayer) error
 	Update(loginUser jwt.UserLogin, id string, req *request.UpdateGameplayer) error
 	Delete(loginUser jwt.UserLogin, id string) error
 	Page(req *request.PageGameplayer) ([]model.GameplayerView, int64, error)
@@ -37,9 +38,10 @@ func (u usecaseGameplayer) Create(loginUser jwt.UserLogin, req *request.CreateGa
 	data = model.Gameplayer{
 		GameID:     req.GameID,
 		PlayerID:   req.PlayerID,
-		NormalGame: req.NormalGame,
-		RubberGame: req.RubberGame,
-		Ball:       req.Ball,
+		NormalGame: 0,
+		RubberGame: 0,
+		Ball:       0,
+		IsPay:      false,
 		CreateBy:   loginUser.UserID,
 		UpdateBy:   loginUser.UserID,
 	}
@@ -50,6 +52,41 @@ func (u usecaseGameplayer) Create(loginUser jwt.UserLogin, req *request.CreateGa
 	tx := conn.Begin()
 
 	err = u.repo.Create(tx, data)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func (u usecaseGameplayer) CreateBulk(loginUser jwt.UserLogin, req *request.CreateBulkGameplayer) error {
+	var err error
+	var data []model.Gameplayer
+
+	for _, playerID := range req.ListPlayerID {
+		data = append(data, model.Gameplayer{
+			GameID:     req.GameID,
+			PlayerID:   playerID,
+			NormalGame: 0,
+			RubberGame: 0,
+			Ball:       0,
+			IsPay:      false,
+			CreateBy:   loginUser.UserID,
+			UpdateBy:   loginUser.UserID,
+		})
+	}
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	tx := conn.Begin()
+
+	err = u.repo.CreateBulk(tx, data)
 	if err != nil {
 		return err
 	}
@@ -78,6 +115,7 @@ func (u usecaseGameplayer) Update(loginUser jwt.UserLogin, id string, req *reque
 	data.NormalGame = req.NormalGame
 	data.RubberGame = req.RubberGame
 	data.Ball = req.Ball
+	data.IsPay = req.IsPay
 	data.UpdateBy = loginUser.UserID
 
 	tx := conn.Begin()

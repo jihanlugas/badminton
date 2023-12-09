@@ -331,6 +331,12 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "companyId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "name": "description",
                         "in": "query"
                     },
@@ -552,6 +558,49 @@
                 }
             }
         },
+        "/gameplayer/bulk": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gameplayer"
+                ],
+                "parameters": [
+                    {
+                        "description": "json req body",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateBulkGameplayer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/gameplayer/page": {
             "get": {
                 "security": [
@@ -571,7 +620,7 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "name": "gorId",
+                        "name": "gameId",
                         "in": "query"
                     },
                     {
@@ -812,6 +861,11 @@
                     {
                         "type": "string",
                         "name": "companyId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "createName",
                         "in": "query"
                     },
                     {
@@ -1061,7 +1115,17 @@
                     },
                     {
                         "type": "string",
+                        "name": "createName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "gameId",
                         "in": "query"
                     },
                     {
@@ -1796,6 +1860,24 @@
                 }
             }
         },
+        "request.CreateBulkGameplayer": {
+            "type": "object",
+            "required": [
+                "gameId",
+                "listPlayerId"
+            ],
+            "properties": {
+                "gameId": {
+                    "type": "string"
+                },
+                "listPlayerId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "request.CreateCompany": {
             "type": "object",
             "required": [
@@ -1841,12 +1923,16 @@
         "request.CreateGame": {
             "type": "object",
             "required": [
+                "companyId",
                 "gorId",
                 "name"
             ],
             "properties": {
                 "ballPrice": {
                     "type": "integer"
+                },
+                "companyId": {
+                    "type": "string"
                 },
                 "description": {
                     "type": "string"
@@ -1856,9 +1942,6 @@
                 },
                 "gorId": {
                     "type": "string"
-                },
-                "isFinish": {
-                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
@@ -1878,20 +1961,11 @@
                 "playerId"
             ],
             "properties": {
-                "ballPrice": {
-                    "type": "integer"
-                },
                 "gameId": {
                     "type": "string"
                 },
-                "normalGame": {
-                    "type": "integer"
-                },
                 "playerId": {
                     "type": "string"
-                },
-                "rubberGame": {
-                    "type": "integer"
                 }
             }
         },
@@ -2049,6 +2123,7 @@
         "request.UpdateGame": {
             "type": "object",
             "required": [
+                "companyId",
                 "gorId",
                 "name"
             ],
@@ -2056,8 +2131,17 @@
                 "ballPrice": {
                     "type": "integer"
                 },
+                "companyId": {
+                    "type": "string"
+                },
+                "debit": {
+                    "type": "integer"
+                },
                 "description": {
                     "type": "string"
+                },
+                "expectedDebit": {
+                    "type": "integer"
                 },
                 "gameDt": {
                     "type": "string"
@@ -2091,6 +2175,9 @@
                 },
                 "gameId": {
                     "type": "string"
+                },
+                "isPay": {
+                    "type": "boolean"
                 },
                 "normalGame": {
                     "type": "integer"

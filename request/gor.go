@@ -26,4 +26,5 @@ type PageGor struct {
 	Name        string `json:"name" form:"name" query:"name"`
 	Description string `json:"description" form:"description" query:"description"`
 	Address     string `json:"address" form:"address" query:"address"`
+	CreateName  string `json:"createName" form:"createName" query:"createName"`
 }

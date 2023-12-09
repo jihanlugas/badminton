@@ -22,10 +22,12 @@ type UpdatePlayer struct {
 
 type PagePlayer struct {
 	Paging
-	CompanyID string `json:"companyId" form:"companyId" query:"companyId" `
-	Name      string `json:"name" form:"name" query:"name" `
-	Email     string `json:"email" form:"email" query:"email" `
-	NoHp      string `json:"noHp" form:"noHp" query:"noHp" `
-	Address   string `json:"address" form:"address" query:"address"`
-	Gender    string `json:"gender" form:"gender" query:"gender"`
+	CompanyID  string `json:"companyId" form:"companyId" query:"companyId" `
+	Name       string `json:"name" form:"name" query:"name" `
+	Email      string `json:"email" form:"email" query:"email" `
+	NoHp       string `json:"noHp" form:"noHp" query:"noHp" `
+	Address    string `json:"address" form:"address" query:"address"`
+	Gender     string `json:"gender" form:"gender" query:"gender"`
+	CreateName string `json:"createName" form:"createName" query:"createName"`
+	GameID     string `json:"gameId" form:"gameId" query:"gameId"`
 }

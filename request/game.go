@@ -11,7 +11,6 @@ type CreateGame struct {
 	RubberGamePrice int64     `json:"rubberGamePrice" validate:""`
 	BallPrice       int64     `json:"ballPrice" validate:""`
 	GameDt          time.Time `json:"gameDt" validate:""`
-	IsFinish        bool      `json:"isFinish" validate:""`
 }
 
 type UpdateGame struct {
@@ -24,11 +23,14 @@ type UpdateGame struct {
 	BallPrice       int64     `json:"ballPrice" validate:""`
 	GameDt          time.Time `json:"gameDt" validate:""`
 	IsFinish        bool      `json:"isFinish" validate:""`
+	ExpectedDebit   int64     `json:"expectedDebit"`
+	Debit           int64     `json:"debit"`
 }
 
 type PageGame struct {
 	Paging
-	GorID       string `json:"gorId" json:"gorId" json:"gorId"`
-	Name        string `json:"name" json:"name" json:"name"`
-	Description string `json:"description" json:"description" json:"description"`
+	CompanyID   string `json:"companyId" form:"companyId" query:"companyId"  validate:"required"`
+	GorID       string `json:"gorId" form:"gorId" query:"gorId"`
+	Name        string `json:"name" form:"name" query:"name"`
+	Description string `json:"description" form:"description" query:"description"`
 }

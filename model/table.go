@@ -108,6 +108,8 @@ type Game struct {
 	BallPrice       int64          `gorm:"not null" json:"ballPrice"`
 	GameDt          time.Time      `gorm:"not null" json:"gameDt"`
 	IsFinish        bool           `gorm:"not null" json:"isFinish"`
+	ExpectedDebit   int64          `gorm:"not null" json:"expectedDebit"`
+	Debit           int64          `gorm:"not null" json:"debit"`
 	CreateBy        string         `gorm:"not null" json:"createBy"`
 	CreateDt        time.Time      `gorm:"not null" json:"createDt"`
 	UpdateBy        string         `gorm:"not null" json:"updateBy"`
@@ -123,6 +125,7 @@ type Gameplayer struct {
 	NormalGame int64          `gorm:"not null" json:"normalGame"`
 	RubberGame int64          `gorm:"not null" json:"rubberGame"`
 	Ball       int64          `gorm:"not null" json:"ball"`
+	IsPay      bool           `gorm:"not null" json:"isPay"`
 	CreateBy   string         `gorm:"not null" json:"createBy"`
 	CreateDt   time.Time      `gorm:"not null" json:"createDt"`
 	UpdateBy   string         `gorm:"not null" json:"updateBy"`

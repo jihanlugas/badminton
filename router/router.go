@@ -112,6 +112,7 @@ func Init() *echo.Echo {
 	gameplayerRouter := router.Group("/gameplayer")
 	gameplayerRouter.GET("/:id", gameplayerHandler.GetById)
 	gameplayerRouter.POST("", gameplayerHandler.Create, checkTokenMiddleware)
+	gameplayerRouter.POST("/bulk", gameplayerHandler.CreateBulk, checkTokenMiddleware)
 	gameplayerRouter.PUT("/:id", gameplayerHandler.Update, checkTokenMiddleware)
 	gameplayerRouter.DELETE("/:id", gameplayerHandler.Delete, checkTokenMiddleware)
 	gameplayerRouter.GET("/page", gameplayerHandler.Page, checkTokenMiddleware)

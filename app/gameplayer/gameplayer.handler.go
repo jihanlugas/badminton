@@ -79,6 +79,40 @@ func (h Handler) Create(c echo.Context) error {
 	return response.Success(http.StatusOK, "success", response.Payload{}).SendJSON(c)
 }
 
+// CreateBulk
+// @Tags Gameplayer
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param req body request.CreateBulkGameplayer true "json req body"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /gameplayer/bulk [post]
+func (h Handler) CreateBulk(c echo.Context) error {
+	var err error
+
+	loginUser, err := jwt.GetUserLoginInfo(c)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	req := new(request.CreateBulkGameplayer)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	if err = c.Validate(req); err != nil {
+		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
+	}
+
+	err = h.usecase.CreateBulk(loginUser, req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.Payload{}).SendJSON(c)
+}
+
 // Update
 // @Tags Gameplayer
 // @Security BearerAuth

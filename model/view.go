@@ -128,6 +128,8 @@ type GameView struct {
 	BallPrice       int64          `json:"ballPrice"`
 	GameDt          time.Time      `json:"gameDt"`
 	IsFinish        bool           `json:"isFinish"`
+	ExpectedDebit   int64          `json:"expectedDebit"`
+	Debit           int64          `json:"debit"`
 	CreateBy        string         `json:"createBy"`
 	CreateDt        time.Time      `json:"createDt"`
 	UpdateBy        string         `json:"updateBy"`
@@ -178,6 +180,7 @@ type GameplayerView struct {
 	NormalGame int64          `json:"normalGame"`
 	RubberGame int64          `json:"rubberGame"`
 	Ball       int64          `json:"ball"`
+	IsPay      bool           `json:"isPay"`
 	CreateBy   string         `json:"createBy"`
 	CreateDt   time.Time      `json:"createDt"`
 	UpdateBy   string         `json:"updateBy"`
