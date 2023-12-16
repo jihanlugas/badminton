@@ -7,6 +7,10 @@ import (
 	"github.com/jihanlugas/badminton/app/authentication"
 	"github.com/jihanlugas/badminton/app/company"
 	"github.com/jihanlugas/badminton/app/game"
+	"github.com/jihanlugas/badminton/app/gamematch"
+	"github.com/jihanlugas/badminton/app/gamematchscore"
+	"github.com/jihanlugas/badminton/app/gamematchteam"
+	"github.com/jihanlugas/badminton/app/gamematchteamplayer"
 	"github.com/jihanlugas/badminton/app/gameplayer"
 	"github.com/jihanlugas/badminton/app/gor"
 	"github.com/jihanlugas/badminton/app/jwt"
@@ -37,6 +41,10 @@ func Init() *echo.Echo {
 	gameRepo := game.NewRepository()
 	playerRepo := player.NewRepository()
 	gameplayerRepo := gameplayer.NewRepository()
+	gamematchRepo := gamematch.NewRepository()
+	gamematchscoreRepo := gamematchscore.NewRepository()
+	gamematchteamRepo := gamematchteam.NewRepository()
+	gamematchteamplayerRepo := gamematchteamplayer.NewRepository()
 
 	authenticationUsecase := authentication.NewAuthenticationUsecase(authenticationRepo, userRepo, companyRepo, usercompanyRepo)
 	userUsecase := user.NewUserUsecase(userRepo)
@@ -46,6 +54,7 @@ func Init() *echo.Echo {
 	gameUsecase := game.NewGameUsecase(gameRepo)
 	playerUsecase := player.NewPlayerUsecase(playerRepo)
 	gameplayerUsecase := gameplayer.NewGameplayerUsecase(gameplayerRepo)
+	gamematchUsecase := gamematch.NewGamematchUsecase(gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo)
 
 	authenticationHandler := authentication.NewAuthenticationHandler(authenticationUsecase)
 	userHandler := user.UserHandler(userUsecase)
@@ -55,6 +64,7 @@ func Init() *echo.Echo {
 	gameHandler := game.GameHandler(gameUsecase)
 	playerHandler := player.PlayerHandler(playerUsecase)
 	gameplayerHandler := gameplayer.GameplayerHandler(gameplayerUsecase)
+	gamematchHandler := gamematch.GamematchHandler(gamematchUsecase)
 
 	//router.Use(logMiddleware)
 	//router.Use(loggerMiddleware)
@@ -116,6 +126,9 @@ func Init() *echo.Echo {
 	gameplayerRouter.PUT("/:id", gameplayerHandler.Update, checkTokenMiddleware)
 	gameplayerRouter.DELETE("/:id", gameplayerHandler.Delete, checkTokenMiddleware)
 	gameplayerRouter.GET("/page", gameplayerHandler.Page, checkTokenMiddleware)
+
+	gamematchRouter := router.Group("/gamematch")
+	gamematchRouter.POST("", gamematchHandler.Create, checkTokenMiddleware)
 
 	return router
 

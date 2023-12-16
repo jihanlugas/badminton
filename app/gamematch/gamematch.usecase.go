@@ -5,6 +5,7 @@ import (
 	"github.com/jihanlugas/badminton/app/gamematchscore"
 	"github.com/jihanlugas/badminton/app/gamematchteam"
 	"github.com/jihanlugas/badminton/app/gamematchteamplayer"
+	"github.com/jihanlugas/badminton/app/gameplayer"
 	"github.com/jihanlugas/badminton/app/jwt"
 	"github.com/jihanlugas/badminton/constant"
 	"github.com/jihanlugas/badminton/db"
@@ -19,6 +20,7 @@ type Usecase interface {
 
 type usecaseGamematch struct {
 	repo                    Repository
+	gameplayerRepo          gameplayer.Repository
 	gamematchscoreRepo      gamematchscore.Repository
 	gamematchteamRepo       gamematchteam.Repository
 	gamematchteamplayerRepo gamematchteamplayer.Repository
@@ -27,9 +29,11 @@ type usecaseGamematch struct {
 func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGamematch) error {
 	var err error
 	var gamematch model.Gamematch
+	var gameplayer model.Gameplayer
 	var gamematchscore model.Gamematchscore
 	var gamematchteam model.Gamematchteam
 	var gamematchteamplayer model.Gamematchteamplayer
+	var players []string
 
 	if loginUser.Role != constant.RoleAdmin {
 		if req.CompanyID != loginUser.CompanyID {
@@ -79,6 +83,59 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 		}
 	}
 
+	for index, data := range req.GameMatchTeams {
+		id := ""
+		if index == 0 {
+			id = leftTeamID
+		} else {
+			id = rightTeamID
+		}
+		gamematchteam = model.Gamematchteam{
+			ID:          id,
+			GameID:      req.GameID,
+			GamematchID: gamematch.ID,
+			Name:        data.Name,
+			CreateBy:    loginUser.UserID,
+		}
+		err = u.gamematchteamRepo.Create(tx, gamematchteam)
+		if err != nil {
+			return err
+		}
+
+		for _, player := range data.GameMatchTeamPlayers {
+			players = append(players, player.PlayerID)
+			gamematchteamplayer = model.Gamematchteamplayer{
+				GameID:          req.GameID,
+				GamematchID:     gamematch.ID,
+				GamematchteamID: gamematchteam.ID,
+				PlayerID:        player.PlayerID,
+				CreateBy:        loginUser.UserID,
+			}
+			err = u.gamematchteamplayerRepo.Create(tx, gamematchteamplayer)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	for _, playerId := range players {
+		gameplayer, err = u.gameplayerRepo.GetByGameIdPlayerId(conn, req.GameID, playerId)
+		if err != nil {
+			return err
+		}
+		if req.IsRubber {
+			gameplayer.RubberGame = gameplayer.RubberGame + 1
+		} else {
+			gameplayer.NormalGame = gameplayer.NormalGame + 1
+		}
+		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.UpdateBy = loginUser.UserID
+		err = u.gameplayerRepo.Update(conn, gameplayer)
+		if err != nil {
+			return err
+		}
+	}
+
 	err = tx.Commit().Error
 	if err != nil {
 		return err
@@ -87,9 +144,10 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 	return err
 }
 
-func NewGamematchUsecase(repo Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository) Usecase {
+func NewGamematchUsecase(repo Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository) Usecase {
 	return usecaseGamematch{
 		repo:                    repo,
+		gameplayerRepo:          gameplayerRepo,
 		gamematchscoreRepo:      gamematchscoreRepo,
 		gamematchteamRepo:       gamematchteamRepo,
 		gamematchteamplayerRepo: gamematchteamplayerRepo,

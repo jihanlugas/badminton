@@ -81,6 +81,54 @@ definitions:
     - gorId
     - name
     type: object
+  request.CreateGamematch:
+    properties:
+      ball:
+        type: integer
+      companyId:
+        type: string
+      gameId:
+        type: string
+      gameMatchScores:
+        items:
+          properties:
+            leftScore:
+              type: integer
+            rightScore:
+              type: integer
+          type: object
+        type: array
+      gameMatchTeams:
+        items:
+          properties:
+            gameMatchTeamPlayers:
+              items:
+                properties:
+                  playerId:
+                    type: string
+                required:
+                - playerId
+                type: object
+              type: array
+            name:
+              type: string
+          required:
+          - name
+          type: object
+        type: array
+      isRubber:
+        type: boolean
+      leftPoint:
+        type: integer
+      matchName:
+        type: string
+      rightPoint:
+        type: integer
+    required:
+    - companyId
+    - gameId
+    - matchName
+    type: object
   request.CreateGameplayer:
     properties:
       gameId:
@@ -632,6 +680,32 @@ paths:
       - BearerAuth: []
       tags:
       - Game
+  /gamematch:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: json req body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateGamematch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      tags:
+      - Gamematch
   /gameplayer:
     post:
       consumes:

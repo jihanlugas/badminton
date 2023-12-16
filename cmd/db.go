@@ -113,6 +113,26 @@ func up() {
 		panic(err)
 	}
 
+	err = conn.Migrator().AutoMigrate(&model.Gamematch{})
+	if err != nil {
+		panic(err)
+	}
+
+	err = conn.Migrator().AutoMigrate(&model.Gamematchscore{})
+	if err != nil {
+		panic(err)
+	}
+
+	err = conn.Migrator().AutoMigrate(&model.Gamematchteam{})
+	if err != nil {
+		panic(err)
+	}
+
+	err = conn.Migrator().AutoMigrate(&model.Gamematchteamplayer{})
+	if err != nil {
+		panic(err)
+	}
+
 	// view
 	vUser := conn.Model(&model.User{}).
 		Select("users.*, u1.fullname as create_name, u2.fullname as update_name, u3.fullname as delete_name").
@@ -233,6 +253,64 @@ func up() {
 		panic(err)
 	}
 
+	vGamematch := conn.Model(&model.Gamematch{}).
+		Select("gamematches.*, companies.name as company_name, games.name as game_name, u1.fullname as create_name").
+		Joins("left join companies companies on companies.id = gamematches.company_id").
+		Joins("left join games games on games.id = gamematches.game_id").
+		Joins("left join users u1 on u1.id = gamematches.create_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAMEMATCH, gorm.ViewOption{
+		Replace: true,
+		Query:   vGamematch,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGamematchscore := conn.Model(&model.Gamematchscore{}).
+		Select("gamematchscores.*, games.name as game_name, gamematches.name as gamematch_name, u1.fullname as create_name").
+		Joins("left join games games on games.id = gamematchscores.game_id").
+		Joins("left join gamematches gamematches on gamematches.id = gamematchscores.gamematch_id").
+		Joins("left join users u1 on u1.id = gamematchscores.create_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAMEMATCHSCORE, gorm.ViewOption{
+		Replace: true,
+		Query:   vGamematchscore,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGamematchteam := conn.Model(&model.Gamematchteam{}).
+		Select("gamematchteams.*, games.name as game_name, gamematches.name as gamematch_name, u1.fullname as create_name").
+		Joins("left join games games on games.id = gamematchteams.game_id").
+		Joins("left join gamematches gamematches on gamematches.id = gamematchteams.gamematch_id").
+		Joins("left join users u1 on u1.id = gamematchteams.create_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAMEMATCHTEAM, gorm.ViewOption{
+		Replace: true,
+		Query:   vGamematchteam,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	vGamematchteamplayer := conn.Model(&model.Gamematchteamplayer{}).
+		Select("gamematchteamplayers.*, games.name as game_name, gamematches.name as gamematch_name, gamematchteams.name as gamematchteam_name, players.name as player_name, u1.fullname as create_name").
+		Joins("left join games games on games.id = gamematchteamplayers.game_id").
+		Joins("left join gamematches gamematches on gamematches.id = gamematchteamplayers.gamematch_id").
+		Joins("left join gamematchteams gamematchteams on gamematchteams.id = gamematchteamplayers.gamematch_id").
+		Joins("left join players players on players.id = gamematchteamplayers.player_id").
+		Joins("left join users u1 on u1.id = gamematchteamplayers.create_by")
+
+	err = conn.Migrator().CreateView(model.VIEW_GAMEMATCHTEAMPLAYER, gorm.ViewOption{
+		Replace: true,
+		Query:   vGamematchteamplayer,
+	})
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 // remove public schema
@@ -320,6 +398,12 @@ func seed() {
 		{CompanyID: btcCompanyID, Name: "Isho", Email: "isho@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{CompanyID: btcCompanyID, Name: "Nico Robin", Email: "robin@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Tersesat", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{CompanyID: btcCompanyID, Name: "Nami", Email: "nami@gmail.com", NoHp: utils.FormatPhoneTo62("081234654789"), Address: "Jl. Yang Salah", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Ussop", Email: "ussop@gmail.com", NoHp: utils.FormatPhoneTo62("081234654123"), Address: "Jl. Yang Bohong", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Vinsmoke Sanji", Email: "sanji@gmail.com", NoHp: utils.FormatPhoneTo62("081234654111"), Address: "Jl. Ke Wanita", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Tony Tony Chopper", Email: "chopper@gmail.com", NoHp: utils.FormatPhoneTo62("081234654112"), Address: "Jl. Medis", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Franky", Email: "franky@gmail.com", NoHp: utils.FormatPhoneTo62("081234654112"), Address: "Jl. Lelaki", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Brook", Email: "brook@gmail.com", NoHp: utils.FormatPhoneTo62("081234654114"), Address: "Jl. Menepati Janji", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{CompanyID: btcCompanyID, Name: "Jinbe", Email: "jinbe@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: utils.FormatPhoneTo62("08128856789"), Address: "Jl. Buntu", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: utils.FormatPhoneTo62("08124556789"), Address: "Jl. Bangka", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: utils.FormatPhoneTo62("08123457689"), Address: "Jl. Permasalahan", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},

@@ -138,7 +138,7 @@ entity "transactions" <<(P,LightGreen)>> {
     create_dt: type(timestampTz)
 }
 
-entity "gamematchs" <<(P,LightGreen)>> {
+entity "gamematches" <<(P,LightGreen)>> {
     id: type(varchar) [PK]
     --
     company_id: type(varchar)
@@ -185,9 +185,9 @@ companies --{ players
 gors --{ games
 games --{ gameplayers
 players --{ gameplayers
-games --{ gamematchs
-gamematchs --{ gamematchteams
-gamematchs --{ gamematchscores
+games --{ gamematches
+gamematches --{ gamematchteams
+gamematches --{ gamematchscores
 gamematchteams --{ gamematchteamplayers
 players --{ gamematchteamplayers
 

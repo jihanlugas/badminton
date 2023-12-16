@@ -9,6 +9,7 @@ import (
 
 type Repository interface {
 	GetById(conn *gorm.DB, id string) (model.Gameplayer, error)
+	GetByGameIdPlayerId(conn *gorm.DB, gameId, playerId string) (model.Gameplayer, error)
 	GetViewById(conn *gorm.DB, id string) (model.GameplayerView, error)
 	Create(conn *gorm.DB, data model.Gameplayer) error
 	CreateBulk(conn *gorm.DB, data []model.Gameplayer) error
@@ -25,6 +26,14 @@ func (r repository) GetById(conn *gorm.DB, id string) (model.Gameplayer, error) 
 	var data model.Gameplayer
 
 	err = conn.Where("id = ? ", id).First(&data).Error
+	return data, err
+}
+
+func (r repository) GetByGameIdPlayerId(conn *gorm.DB, gameId, playerId string) (model.Gameplayer, error) {
+	var err error
+	var data model.Gameplayer
+
+	err = conn.Where("game_id = ? AND player_id = ?", gameId, playerId).First(&data).Error
 	return data, err
 }
 
