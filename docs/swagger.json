@@ -624,6 +624,11 @@
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "gameName",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "name": "limit",
                         "in": "query"
@@ -636,6 +641,11 @@
                     {
                         "type": "string",
                         "name": "playerId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "playerName",
                         "in": "query"
                     },
                     {
@@ -2170,7 +2180,7 @@
                 "playerId"
             ],
             "properties": {
-                "ballPrice": {
+                "ball": {
                     "type": "integer"
                 },
                 "gameId": {

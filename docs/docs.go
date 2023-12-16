@@ -631,6 +631,11 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "gameName",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "name": "limit",
                         "in": "query"
@@ -643,6 +648,11 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "playerId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "playerName",
                         "in": "query"
                     },
                     {
@@ -2177,7 +2187,7 @@ const docTemplate = `{
                 "playerId"
             ],
             "properties": {
-                "ballPrice": {
+                "ball": {
                     "type": "integer"
                 },
                 "gameId": {

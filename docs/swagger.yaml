@@ -226,7 +226,7 @@ definitions:
     type: object
   request.UpdateGameplayer:
     properties:
-      ballPrice:
+      ball:
         type: integer
       gameId:
         type: string
@@ -772,6 +772,9 @@ paths:
         name: gameId
         type: string
       - in: query
+        name: gameName
+        type: string
+      - in: query
         name: limit
         type: integer
       - in: query
@@ -779,6 +782,9 @@ paths:
         type: integer
       - in: query
         name: playerId
+        type: string
+      - in: query
+        name: playerName
         type: string
       - in: query
         name: sortField

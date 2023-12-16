@@ -1,4 +1,4 @@
-package transaction
+package gamematchteam
 
 import (
 	"github.com/jihanlugas/badminton/model"

@@ -15,12 +15,14 @@ type UpdateGameplayer struct {
 	PlayerID   string `json:"playerId" validate:"required"`
 	NormalGame int64  `json:"normalGame" validate:""`
 	RubberGame int64  `json:"rubberGame" validate:""`
-	Ball       int64  `json:"ballPrice" validate:""`
+	Ball       int64  `json:"ball" validate:""`
 	IsPay      bool   `json:"isPay" validate:""`
 }
 
 type PageGameplayer struct {
 	Paging
-	GameID   string `json:"gameId" form:"gameId" query:"gameId"`
-	PlayerID string `json:"playerId" form:"playerId" query:"playerId"`
+	GameID     string `json:"gameId" form:"gameId" query:"gameId"`
+	PlayerID   string `json:"playerId" form:"playerId" query:"playerId"`
+	GameName   string `json:"gameName" form:"gameName" query:"gameName"`
+	PlayerName string `json:"playerName" form:"playerName" query:"playerName"`
 }
