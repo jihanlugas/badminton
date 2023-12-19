@@ -16,6 +16,7 @@ import (
 
 type Usecase interface {
 	Create(loginUser jwt.UserLogin, req *request.CreateGamematch) error
+	Page(req *request.PageGamematch) ([]model.GamematchView, int64, error)
 }
 
 type usecaseGamematch struct {
@@ -142,6 +143,22 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 	}
 
 	return err
+}
+
+func (u usecaseGamematch) Page(req *request.PageGamematch) ([]model.GamematchView, int64, error) {
+	var err error
+	var data []model.GamematchView
+	var count int64
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	data, count, err = u.repo.Page(conn, req)
+	if err != nil {
+		return data, count, err
+	}
+
+	return data, count, err
 }
 
 func NewGamematchUsecase(repo Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository) Usecase {

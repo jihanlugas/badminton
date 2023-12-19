@@ -254,9 +254,11 @@ func up() {
 	}
 
 	vGamematch := conn.Model(&model.Gamematch{}).
-		Select("gamematches.*, companies.name as company_name, games.name as game_name, u1.fullname as create_name").
+		Select("gamematches.*, companies.name as company_name, games.name as game_name, gamematchteamleft.name as left_team_name, gamematchteamright.name as right_team_name, u1.fullname as create_name").
 		Joins("left join companies companies on companies.id = gamematches.company_id").
 		Joins("left join games games on games.id = gamematches.game_id").
+		Joins("left join gamematchteams gamematchteamleft on gamematchteamleft.id = gamematches.left_team_id").
+		Joins("left join gamematchteams gamematchteamright on gamematchteamright.id = gamematches.right_team_id").
 		Joins("left join users u1 on u1.id = gamematches.create_by")
 
 	err = conn.Migrator().CreateView(model.VIEW_GAMEMATCH, gorm.ViewOption{
@@ -299,7 +301,7 @@ func up() {
 		Select("gamematchteamplayers.*, games.name as game_name, gamematches.name as gamematch_name, gamematchteams.name as gamematchteam_name, players.name as player_name, u1.fullname as create_name").
 		Joins("left join games games on games.id = gamematchteamplayers.game_id").
 		Joins("left join gamematches gamematches on gamematches.id = gamematchteamplayers.gamematch_id").
-		Joins("left join gamematchteams gamematchteams on gamematchteams.id = gamematchteamplayers.gamematch_id").
+		Joins("left join gamematchteams gamematchteams on gamematchteams.id = gamematchteamplayers.gamematchteam_id").
 		Joins("left join players players on players.id = gamematchteamplayers.player_id").
 		Joins("left join users u1 on u1.id = gamematchteamplayers.create_by")
 

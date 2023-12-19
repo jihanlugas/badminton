@@ -45,6 +45,31 @@ func (h Handler) GetById(c echo.Context) error {
 	return response.Success(http.StatusOK, "success", res).SendJSON(c)
 }
 
+// GetByIdDetail
+// @Tags Game
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /game/{id}/detail [get]
+func (h Handler) GetByIdDetail(c echo.Context) error {
+	var err error
+
+	id := c.Param("id")
+	if id == "" {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	data, err := h.usecase.GetByIdDetail(id)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", data).SendJSON(c)
+}
+
 // Create
 // @Tags Game
 // @Security BearerAuth

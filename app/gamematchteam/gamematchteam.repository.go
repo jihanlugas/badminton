@@ -1,7 +1,9 @@
 package gamematchteam
 
 import (
+	"fmt"
 	"github.com/jihanlugas/badminton/model"
+	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
 )
 
@@ -9,7 +11,7 @@ type Repository interface {
 	GetById(conn *gorm.DB, id string) (model.Gamematchteam, error)
 	GetViewById(conn *gorm.DB, id string) (model.GamematchteamView, error)
 	Create(conn *gorm.DB, data model.Gamematchteam) error
-	//Page(conn *gorm.DB, req *request.PageGamematchteam) ([]model.GamematchteamView, int64, error)
+	Page(conn *gorm.DB, req *request.PageGamematchteam) ([]model.GamematchteamView, int64, error)
 }
 
 type repository struct {
@@ -46,34 +48,37 @@ func (r repository) Create(conn *gorm.DB, data model.Gamematchteam) error {
 //	return conn.Save(&data).Error
 //}
 
-//func (r repository) Page(conn *gorm.DB, req *request.PageGamematchteam) ([]model.GamematchteamView, int64, error) {
-//	var err error
-//	var data []model.GamematchteamView
-//	var count int64
-//
-//	query := conn.Model(&data).
-//		Where("LOWER(company_id) LIKE LOWER(?)", "%"+req.CompanyID+"%").
-//		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%")
-//
-//	err = query.Count(&count).Error
-//	if err != nil {
-//		return data, count, err
-//	}
-//
-//	if req.SortField != "" {
-//		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
-//	} else {
-//		query = query.Order(fmt.Sprintf("%s %s", "name", "asc"))
-//	}
-//	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
-//		Limit(req.GetLimit()).
-//		Find(&data).Error
-//	if err != nil {
-//		return data, count, err
-//	}
-//
-//	return data, count, err
-//}
+func (r repository) Page(conn *gorm.DB, req *request.PageGamematchteam) ([]model.GamematchteamView, int64, error) {
+	var err error
+	var data []model.GamematchteamView
+	var count int64
+
+	query := conn.Model(&data).
+		Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
+		Where("LOWER(gamematch_name) LIKE LOWER(?)", "%"+req.GamematchName+"%").
+		Where("LOWER(game_name) LIKE LOWER(?)", "%"+req.GameName+"%").
+		Where("game_id LIKE ?", "%"+req.GameID+"%").
+		Where("gamematch_id LIKE ?", "%"+req.GamematchID+"%")
+
+	err = query.Count(&count).Error
+	if err != nil {
+		return data, count, err
+	}
+
+	if req.SortField != "" {
+		query = query.Order(fmt.Sprintf("%s %s", req.SortField, req.SortOrder))
+	} else {
+		query = query.Order(fmt.Sprintf("%s %s", "name", "asc"))
+	}
+	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
+		Limit(req.GetLimit()).
+		Find(&data).Error
+	if err != nil {
+		return data, count, err
+	}
+
+	return data, count, err
+}
 
 func NewRepository() Repository {
 	return repository{}

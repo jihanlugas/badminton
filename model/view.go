@@ -266,6 +266,7 @@ type GamematchteamplayerView struct {
 	GameName          string    `json:"gameName"`
 	GamematchName     string    `json:"gamematchName"`
 	GamematchteamName string    `json:"gamematchteamName"`
+	PlayerName        string    `json:"playerName"`
 	CreateName        string    `json:"createName"`
 }
 

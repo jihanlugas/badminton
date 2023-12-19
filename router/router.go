@@ -51,7 +51,7 @@ func Init() *echo.Echo {
 	companyUsecase := company.NewCompanyUsecase(companyRepo, userRepo, usercompanyRepo)
 	transactionUsecase := transaction.NewTransactionUsecase(transactionRepo)
 	gorUsecase := gor.NewGorUsecase(gorRepo)
-	gameUsecase := game.NewGameUsecase(gameRepo)
+	gameUsecase := game.NewGameUsecase(gameRepo, gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo)
 	playerUsecase := player.NewPlayerUsecase(playerRepo)
 	gameplayerUsecase := gameplayer.NewGameplayerUsecase(gameplayerRepo)
 	gamematchUsecase := gamematch.NewGamematchUsecase(gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo)
@@ -107,6 +107,7 @@ func Init() *echo.Echo {
 
 	gameRouter := router.Group("/game")
 	gameRouter.GET("/:id", gameHandler.GetById)
+	gameRouter.GET("/:id/detail", gameHandler.GetByIdDetail)
 	gameRouter.POST("", gameHandler.Create, checkTokenMiddleware)
 	gameRouter.PUT("/:id", gameHandler.Update, checkTokenMiddleware)
 	gameRouter.DELETE("/:id", gameHandler.Delete, checkTokenMiddleware)
