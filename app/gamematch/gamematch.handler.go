@@ -18,6 +18,35 @@ func GamematchHandler(usecase Usecase) Handler {
 	}
 }
 
+// Page
+// @Tags Game
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param req query request.PageGamematch false "query string"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /gamematch/page [get]
+func (h Handler) Page(c echo.Context) error {
+	var err error
+
+	req := new(request.PageGamematch)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	if err = c.Validate(req); err != nil {
+		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
+	}
+
+	data, count, err := h.usecase.Page(req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
+}
+
 // Create
 // @Tags Gamematch
 // @Security BearerAuth

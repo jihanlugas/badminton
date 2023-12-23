@@ -131,7 +131,7 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 		}
 		gameplayer.Ball = gameplayer.Ball + req.Ball
 		gameplayer.UpdateBy = loginUser.UserID
-		err = u.gameplayerRepo.Update(conn, gameplayer)
+		err = u.gameplayerRepo.Update(tx, gameplayer)
 		if err != nil {
 			return err
 		}

@@ -731,6 +731,48 @@ paths:
       - BearerAuth: []
       tags:
       - Gamematch
+  /gamematch/page:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: companyId
+        required: true
+        type: string
+      - in: query
+        name: gameId
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sortField
+        type: string
+      - in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      tags:
+      - Game
   /gameplayer:
     post:
       consumes:

@@ -51,7 +51,7 @@ func Init() *echo.Echo {
 	companyUsecase := company.NewCompanyUsecase(companyRepo, userRepo, usercompanyRepo)
 	transactionUsecase := transaction.NewTransactionUsecase(transactionRepo)
 	gorUsecase := gor.NewGorUsecase(gorRepo)
-	gameUsecase := game.NewGameUsecase(gameRepo, gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo)
+	gameUsecase := game.NewGameUsecase(gameRepo, gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo, transactionRepo)
 	playerUsecase := player.NewPlayerUsecase(playerRepo)
 	gameplayerUsecase := gameplayer.NewGameplayerUsecase(gameplayerRepo)
 	gamematchUsecase := gamematch.NewGamematchUsecase(gamematchRepo, gameplayerRepo, gamematchscoreRepo, gamematchteamRepo, gamematchteamplayerRepo)
@@ -107,6 +107,7 @@ func Init() *echo.Echo {
 
 	gameRouter := router.Group("/game")
 	gameRouter.GET("/:id", gameHandler.GetById)
+	gameRouter.POST("/:id/finish", gameHandler.GetById)
 	gameRouter.GET("/:id/detail", gameHandler.GetByIdDetail)
 	gameRouter.POST("", gameHandler.Create, checkTokenMiddleware)
 	gameRouter.PUT("/:id", gameHandler.Update, checkTokenMiddleware)
@@ -129,6 +130,7 @@ func Init() *echo.Echo {
 	gameplayerRouter.GET("/page", gameplayerHandler.Page, checkTokenMiddleware)
 
 	gamematchRouter := router.Group("/gamematch")
+	gamematchRouter.GET("/page", gamematchHandler.Page, checkTokenMiddleware)
 	gamematchRouter.POST("", gamematchHandler.Create, checkTokenMiddleware)
 
 	return router

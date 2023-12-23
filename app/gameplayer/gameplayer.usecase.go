@@ -86,7 +86,7 @@ func (u usecaseGameplayer) CreateBulk(loginUser jwt.UserLogin, req *request.Crea
 
 	tx := conn.Begin()
 
-	err = u.repo.CreateBulk(tx, data)
+	err = u.repo.ListCreate(tx, data)
 	if err != nil {
 		return err
 	}

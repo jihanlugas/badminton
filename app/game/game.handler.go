@@ -202,3 +202,38 @@ func (h Handler) Page(c echo.Context) error {
 
 	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
 }
+
+// Finish
+// @Tags Game
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /game/{id}/finish [get]
+func (h Handler) Finish(c echo.Context) error {
+	var err error
+
+	id := c.Param("id")
+	if id == "" {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	loginUser, err := jwt.GetUserLoginInfo(c)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	req := new(request.FinishGame)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	err = h.usecase.FinishGame(id, loginUser, req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.Payload{}).SendJSON(c)
+}

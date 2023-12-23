@@ -12,7 +12,7 @@ type Repository interface {
 	GetByGameIdPlayerId(conn *gorm.DB, gameId, playerId string) (model.Gameplayer, error)
 	GetViewById(conn *gorm.DB, id string) (model.GameplayerView, error)
 	Create(conn *gorm.DB, data model.Gameplayer) error
-	CreateBulk(conn *gorm.DB, data []model.Gameplayer) error
+	ListCreate(conn *gorm.DB, data []model.Gameplayer) error
 	Update(conn *gorm.DB, data model.Gameplayer) error
 	Delete(conn *gorm.DB, data model.Gameplayer) error
 	Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.GameplayerView, int64, error)
@@ -49,7 +49,7 @@ func (r repository) Create(conn *gorm.DB, data model.Gameplayer) error {
 	return conn.Create(&data).Error
 }
 
-func (r repository) CreateBulk(conn *gorm.DB, data []model.Gameplayer) error {
+func (r repository) ListCreate(conn *gorm.DB, data []model.Gameplayer) error {
 	return conn.Create(&data).Error
 }
 

@@ -34,3 +34,8 @@ type PageGame struct {
 	Name        string `json:"name" form:"name" query:"name"`
 	Description string `json:"description" form:"description" query:"description"`
 }
+
+type FinishGame struct {
+	GameID       string              `json:"gameId" validate:"required"`
+	Transactions []CreateTransaction `json:"transactions"`
+}

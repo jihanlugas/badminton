@@ -11,8 +11,7 @@ type Repository interface {
 	GetById(conn *gorm.DB, id string) (model.Transaction, error)
 	GetViewById(conn *gorm.DB, id string) (model.TransactionView, error)
 	Create(conn *gorm.DB, data model.Transaction) error
-	//Update(conn *gorm.DB, data model.Transaction) error
-	//Delete(conn *gorm.DB, data model.Transaction) error
+	ListCreate(conn *gorm.DB, data []model.Transaction) error
 	Page(conn *gorm.DB, req *request.PageTransaction) ([]model.TransactionView, int64, error)
 }
 
@@ -39,16 +38,9 @@ func (r repository) Create(conn *gorm.DB, data model.Transaction) error {
 	return conn.Create(&data).Error
 }
 
-//func (r repository) Update(conn *gorm.DB, data model.Transaction) error {
-//	return conn.Save(&data).Error
-//}
-
-//func (r repository) Delete(conn *gorm.DB, data model.Transaction) error {
-//	now := time.Now()
-//	data.DeleteDt = &now
-//
-//	return conn.Save(&data).Error
-//}
+func (r repository) ListCreate(conn *gorm.DB, data []model.Transaction) error {
+	return conn.Create(&data).Error
+}
 
 func (r repository) Page(conn *gorm.DB, req *request.PageTransaction) ([]model.TransactionView, int64, error) {
 	var err error

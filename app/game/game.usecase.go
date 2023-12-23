@@ -8,6 +8,7 @@ import (
 	"github.com/jihanlugas/badminton/app/gamematchteamplayer"
 	"github.com/jihanlugas/badminton/app/gameplayer"
 	"github.com/jihanlugas/badminton/app/jwt"
+	"github.com/jihanlugas/badminton/app/transaction"
 	"github.com/jihanlugas/badminton/constant"
 	"github.com/jihanlugas/badminton/db"
 	"github.com/jihanlugas/badminton/model"
@@ -22,6 +23,7 @@ type Usecase interface {
 	Update(loginUser jwt.UserLogin, id string, req *request.UpdateGame) error
 	Delete(loginUser jwt.UserLogin, id string) error
 	Page(req *request.PageGame) ([]model.GameView, int64, error)
+	FinishGame(id string, loginUser jwt.UserLogin, req *request.FinishGame) error
 }
 
 type usecaseGame struct {
@@ -31,6 +33,7 @@ type usecaseGame struct {
 	gamematchscoreRepo      gamematchscore.Repository
 	gamematchteamRepo       gamematchteam.Repository
 	gamematchteamplayerRepo gamematchteamplayer.Repository
+	transactionRepo         transaction.Repository
 }
 
 func (u usecaseGame) GetById(id string) (model.GameView, error) {
@@ -256,7 +259,84 @@ func (u usecaseGame) Page(req *request.PageGame) ([]model.GameView, int64, error
 	return data, count, err
 }
 
-func NewGameUsecase(repo Repository, gamematchRepo gamematch.Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository) Usecase {
+func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request.FinishGame) error {
+	var err error
+	var game model.Game
+	var gameplayers []model.GameplayerView
+	var transactions []model.Transaction
+	var expectedDebit int64
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	game, err = u.repo.GetById(conn, id)
+	if err != nil {
+		return err
+	}
+
+	if game.IsFinish {
+		return errors.New("game already finished")
+	}
+
+	if loginUser.Role != constant.RoleAdmin {
+		if game.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
+
+	gameplayers, _, err = u.gameplayerRepo.Page(conn, &request.PageGameplayer{
+		GameID: id,
+		Paging: request.Paging{
+			Limit: 1000,
+			Page:  1,
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	for _, data := range gameplayers {
+		expectedDebit += (data.NormalGame * game.NormalGamePrice) + (data.RubberGame * game.RubberGamePrice) + (data.Ball * game.BallPrice)
+	}
+
+	for _, data := range req.Transactions {
+		if data.CompanyID != game.CompanyID {
+			return errors.New("permission denied")
+		}
+		newTransaction := model.Transaction{
+			CompanyID: data.CompanyID,
+			Name:      data.Name,
+			IsDebit:   data.IsDebit,
+			Price:     data.Price,
+			CreateBy:  loginUser.UserID,
+		}
+		transactions = append(transactions, newTransaction)
+	}
+
+	tx := conn.Begin()
+
+	err = u.transactionRepo.ListCreate(tx, transactions)
+	if err != nil {
+		return err
+	}
+
+	game.IsFinish = true
+	game.ExpectedDebit = expectedDebit
+	game.UpdateBy = loginUser.UserID
+	err = u.repo.Update(tx, game)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func NewGameUsecase(repo Repository, gamematchRepo gamematch.Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository, transactionRepo transaction.Repository) Usecase {
 	return usecaseGame{
 		repo:                    repo,
 		gamematchRepo:           gamematchRepo,
@@ -264,5 +344,6 @@ func NewGameUsecase(repo Repository, gamematchRepo gamematch.Repository, gamepla
 		gamematchscoreRepo:      gamematchscoreRepo,
 		gamematchteamRepo:       gamematchteamRepo,
 		gamematchteamplayerRepo: gamematchteamplayerRepo,
+		transactionRepo:         transactionRepo,
 	}
 }
