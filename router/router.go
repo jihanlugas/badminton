@@ -107,8 +107,8 @@ func Init() *echo.Echo {
 
 	gameRouter := router.Group("/game")
 	gameRouter.GET("/:id", gameHandler.GetById)
-	gameRouter.POST("/:id/finish", gameHandler.GetById)
 	gameRouter.GET("/:id/detail", gameHandler.GetByIdDetail)
+	gameRouter.POST("/:id/finish", gameHandler.FinishGame, checkTokenMiddleware)
 	gameRouter.POST("", gameHandler.Create, checkTokenMiddleware)
 	gameRouter.PUT("/:id", gameHandler.Update, checkTokenMiddleware)
 	gameRouter.DELETE("/:id", gameHandler.Delete, checkTokenMiddleware)

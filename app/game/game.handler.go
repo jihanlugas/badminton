@@ -203,7 +203,7 @@ func (h Handler) Page(c echo.Context) error {
 	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
 }
 
-// Finish
+// FinishGame
 // @Tags Game
 // @Security BearerAuth
 // @Accept json
@@ -212,7 +212,7 @@ func (h Handler) Page(c echo.Context) error {
 // @Success      200  {object}	response.Response
 // @Failure      500  {object}  response.Response
 // @Router /game/{id}/finish [get]
-func (h Handler) Finish(c echo.Context) error {
+func (h Handler) FinishGame(c echo.Context) error {
 	var err error
 
 	id := c.Param("id")
