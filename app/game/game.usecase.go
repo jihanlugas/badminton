@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+	"github.com/jihanlugas/badminton/app/company"
 	"github.com/jihanlugas/badminton/app/gamematch"
 	"github.com/jihanlugas/badminton/app/gamematchscore"
 	"github.com/jihanlugas/badminton/app/gamematchteam"
@@ -28,6 +29,7 @@ type Usecase interface {
 
 type usecaseGame struct {
 	repo                    Repository
+	companyRepo             company.Repository
 	gamematchRepo           gamematch.Repository
 	gameplayerRepo          gameplayer.Repository
 	gamematchscoreRepo      gamematchscore.Repository
@@ -262,9 +264,11 @@ func (u usecaseGame) Page(req *request.PageGame) ([]model.GameView, int64, error
 func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request.FinishGame) error {
 	var err error
 	var game model.Game
+	var company model.Company
 	var gameplayers []model.GameplayerView
 	var transactions []model.Transaction
 	var expectedDebit int64
+	var balance int64
 
 	conn, closeConn := db.GetConnection()
 	defer closeConn()
@@ -282,6 +286,11 @@ func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request
 		if game.CompanyID != loginUser.CompanyID {
 			return errors.New("permission denied")
 		}
+	}
+
+	company, err = u.companyRepo.GetById(conn, game.CompanyID)
+	if err != nil {
+		return err
 	}
 
 	gameplayers, _, err = u.gameplayerRepo.Page(conn, &request.PageGameplayer{
@@ -302,6 +311,11 @@ func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request
 	for _, data := range req.Transactions {
 		if data.CompanyID != game.CompanyID {
 			return errors.New("permission denied")
+		}
+		if data.IsDebit {
+			balance += data.Price
+		} else {
+			balance -= data.Price
 		}
 		newTransaction := model.Transaction{
 			CompanyID: data.CompanyID,
@@ -328,6 +342,13 @@ func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request
 		return err
 	}
 
+	company.Balance = company.Balance + balance
+	company.UpdateBy = loginUser.UserID
+	err = u.companyRepo.Update(tx, company)
+	if err != nil {
+		return err
+	}
+
 	err = tx.Commit().Error
 	if err != nil {
 		return err
@@ -336,9 +357,10 @@ func (u usecaseGame) FinishGame(id string, loginUser jwt.UserLogin, req *request
 	return err
 }
 
-func NewGameUsecase(repo Repository, gamematchRepo gamematch.Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository, transactionRepo transaction.Repository) Usecase {
+func NewGameUsecase(repo Repository, companyRepo company.Repository, gamematchRepo gamematch.Repository, gameplayerRepo gameplayer.Repository, gamematchscoreRepo gamematchscore.Repository, gamematchteamRepo gamematchteam.Repository, gamematchteamplayerRepo gamematchteamplayer.Repository, transactionRepo transaction.Repository) Usecase {
 	return usecaseGame{
 		repo:                    repo,
+		companyRepo:             companyRepo,
 		gamematchRepo:           gamematchRepo,
 		gameplayerRepo:          gameplayerRepo,
 		gamematchscoreRepo:      gamematchscoreRepo,

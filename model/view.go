@@ -81,7 +81,9 @@ func (UsercompanyView) TableName() string {
 type TransactionView struct {
 	ID          string    `json:"id"`
 	CompanyID   string    `json:"companyId"`
+	Name        string    `json:"name"`
 	IsDebit     bool      `json:"isDebit"`
+	Price       int64     `json:"price"`
 	CreateBy    string    `json:"createBy"`
 	CreateDt    time.Time `json:"createDt"`
 	CompanyName string    `json:"companyName"`
