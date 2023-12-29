@@ -126,6 +126,7 @@ type Gameplayer struct {
 	RubberGame int64          `gorm:"not null" json:"rubberGame"`
 	Ball       int64          `gorm:"not null" json:"ball"`
 	IsPay      bool           `gorm:"not null" json:"isPay"`
+	Point      int64          `gorm:"not null" json:"point"`
 	CreateBy   string         `gorm:"not null" json:"createBy"`
 	CreateDt   time.Time      `gorm:"not null" json:"createDt"`
 	UpdateBy   string         `gorm:"not null" json:"updateBy"`

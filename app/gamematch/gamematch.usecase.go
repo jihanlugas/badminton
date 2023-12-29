@@ -34,7 +34,8 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 	var gamematchscore model.Gamematchscore
 	var gamematchteam model.Gamematchteam
 	var gamematchteamplayer model.Gamematchteamplayer
-	var players []string
+	var leftplayers []string
+	var rightplayers []string
 
 	if loginUser.Role != constant.RoleAdmin {
 		if req.CompanyID != loginUser.CompanyID {
@@ -104,7 +105,11 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 		}
 
 		for _, player := range data.GameMatchTeamPlayers {
-			players = append(players, player.PlayerID)
+			if index == 0 {
+				leftplayers = append(leftplayers, player.PlayerID)
+			} else {
+				rightplayers = append(rightplayers, player.PlayerID)
+			}
 			gamematchteamplayer = model.Gamematchteamplayer{
 				GameID:          req.GameID,
 				GamematchID:     gamematch.ID,
@@ -119,7 +124,7 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 		}
 	}
 
-	for _, playerId := range players {
+	for _, playerId := range leftplayers {
 		gameplayer, err = u.gameplayerRepo.GetByGameIdPlayerId(conn, req.GameID, playerId)
 		if err != nil {
 			return err
@@ -130,6 +135,26 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 			gameplayer.NormalGame = gameplayer.NormalGame + 1
 		}
 		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.Point = gameplayer.Point + req.LeftTeamPoint
+		gameplayer.UpdateBy = loginUser.UserID
+		err = u.gameplayerRepo.Update(tx, gameplayer)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, playerId := range rightplayers {
+		gameplayer, err = u.gameplayerRepo.GetByGameIdPlayerId(conn, req.GameID, playerId)
+		if err != nil {
+			return err
+		}
+		if req.IsRubber {
+			gameplayer.RubberGame = gameplayer.RubberGame + 1
+		} else {
+			gameplayer.NormalGame = gameplayer.NormalGame + 1
+		}
+		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.Point = gameplayer.Point + req.RightTeamPoint
 		gameplayer.UpdateBy = loginUser.UserID
 		err = u.gameplayerRepo.Update(tx, gameplayer)
 		if err != nil {

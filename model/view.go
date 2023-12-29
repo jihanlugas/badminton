@@ -183,6 +183,7 @@ type GameplayerView struct {
 	RubberGame int64          `json:"rubberGame"`
 	Ball       int64          `json:"ball"`
 	IsPay      bool           `json:"isPay"`
+	Point      int64          `json:"point"`
 	CreateBy   string         `json:"createBy"`
 	CreateDt   time.Time      `json:"createDt"`
 	UpdateBy   string         `json:"updateBy"`
