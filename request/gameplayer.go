@@ -25,4 +25,10 @@ type PageGameplayer struct {
 	PlayerID   string `json:"playerId" form:"playerId" query:"playerId"`
 	GameName   string `json:"gameName" form:"gameName" query:"gameName"`
 	PlayerName string `json:"playerName" form:"playerName" query:"playerName"`
+	Gender     string `json:"gender" form:"gender" query:"gender"`
+}
+
+type PageRankGameplayer struct {
+	Paging
+	Gender string `json:"gender" form:"gender" query:"gender"`
 }

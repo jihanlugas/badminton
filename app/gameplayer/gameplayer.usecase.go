@@ -14,6 +14,7 @@ type Usecase interface {
 	Update(loginUser jwt.UserLogin, id string, req *request.UpdateGameplayer) error
 	Delete(loginUser jwt.UserLogin, id string) error
 	Page(req *request.PageGameplayer) ([]model.GameplayerView, int64, error)
+	PageRank(req *request.PageRankGameplayer) ([]model.GameplayerRangking, int64, error)
 }
 
 type usecaseGameplayer struct {
@@ -170,6 +171,22 @@ func (u usecaseGameplayer) Page(req *request.PageGameplayer) ([]model.Gameplayer
 	defer closeConn()
 
 	data, count, err = u.repo.Page(conn, req)
+	if err != nil {
+		return data, count, err
+	}
+
+	return data, count, err
+}
+
+func (u usecaseGameplayer) PageRank(req *request.PageRankGameplayer) ([]model.GameplayerRangking, int64, error) {
+	var err error
+	var data []model.GameplayerRangking
+	var count int64
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	data, count, err = u.repo.PageRank(conn, req)
 	if err != nil {
 		return data, count, err
 	}

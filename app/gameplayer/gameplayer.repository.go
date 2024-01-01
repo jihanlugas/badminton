@@ -16,6 +16,7 @@ type Repository interface {
 	Update(conn *gorm.DB, data model.Gameplayer) error
 	Delete(conn *gorm.DB, data model.Gameplayer) error
 	Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.GameplayerView, int64, error)
+	PageRank(conn *gorm.DB, req *request.PageRankGameplayer) ([]model.GameplayerRangking, int64, error)
 }
 
 type repository struct {
@@ -72,6 +73,10 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.Ga
 		Where("game_id LIKE ?", "%"+req.GameID+"%").
 		Where("player_id LIKE ?", "%"+req.PlayerID+"%")
 
+	if req.Gender != "" {
+		query = query.Where("gender = ?", req.Gender)
+	}
+
 	err = query.Count(&count).Error
 	if err != nil {
 		return data, count, err
@@ -82,6 +87,38 @@ func (r repository) Page(conn *gorm.DB, req *request.PageGameplayer) ([]model.Ga
 	} else {
 		query = query.Order(fmt.Sprintf("%s %s", "create_dt", "asc"))
 	}
+	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
+		Limit(req.GetLimit()).
+		Find(&data).Error
+	if err != nil {
+		return data, count, err
+	}
+
+	return data, count, err
+}
+
+func (r repository) PageRank(conn *gorm.DB, req *request.PageRankGameplayer) ([]model.GameplayerRangking, int64, error) {
+	var err error
+	var data []model.GameplayerRangking
+	var count int64
+
+	query := conn.Model(&data).
+		Select("player_id, player_name, gender,sum(normal_game) as normal_game,sum(rubber_game) as rubber_game,sum(normal_game + rubber_game) as game,sum(ball) as ball,sum(point) as point, RANK () OVER (ORDER BY sum(point) DESC) rank ").
+		Where("is_finish = ?", true)
+
+	if req.Gender != "" {
+		query = query.Where("gender = ?", req.Gender)
+	}
+
+	query = query.Group("player_id, player_name, gender")
+
+	err = query.Count(&count).Error
+	if err != nil {
+		return data, count, err
+	}
+
+	query = query.Order(fmt.Sprintf("%s %s", "rank", "asc"))
+
 	err = query.Offset((req.GetPage() - 1) * req.GetLimit()).
 		Limit(req.GetLimit()).
 		Find(&data).Error

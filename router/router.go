@@ -128,6 +128,7 @@ func Init() *echo.Echo {
 	gameplayerRouter.PUT("/:id", gameplayerHandler.Update, checkTokenMiddleware)
 	gameplayerRouter.DELETE("/:id", gameplayerHandler.Delete, checkTokenMiddleware)
 	gameplayerRouter.GET("/page", gameplayerHandler.Page, checkTokenMiddleware)
+	gameplayerRouter.GET("/page-rank", gameplayerHandler.PageRank, checkTokenMiddleware)
 
 	gamematchRouter := router.Group("/gamematch")
 	gamematchRouter.GET("/page", gamematchHandler.Page, checkTokenMiddleware)

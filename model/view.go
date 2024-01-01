@@ -191,13 +191,32 @@ type GameplayerView struct {
 	DeleteBy   string         `json:"deleteBy"`
 	DeleteDt   gorm.DeletedAt `json:"deleteDt"`
 	GameName   string         `json:"gameName"`
+	GameDt     time.Time      `json:"gameDt"`
+	IsFinish   bool           `json:"isFinish"`
 	PlayerName string         `json:"playerName"`
+	Gender     string         `json:"gender"`
 	CreateName string         `json:"createName"`
 	UpdateName string         `json:"updateName"`
 	DeleteName string         `json:"deleteName"`
 }
 
 func (GameplayerView) TableName() string {
+	return VIEW_GAMEPLAYER
+}
+
+type GameplayerRangking struct {
+	PlayerID   string `json:"playerId"`
+	PlayerName string `json:"playerName"`
+	Gender     string `json:"gender"`
+	NormalGame int64  `json:"normalGame"`
+	RubberGame int64  `json:"rubberGame"`
+	Game       int64  `json:"game"`
+	Ball       int64  `json:"ball"`
+	Point      int64  `json:"point"`
+	Rank       int64  `json:"rank"`
+}
+
+func (GameplayerRangking) TableName() string {
 	return VIEW_GAMEPLAYER
 }
 

@@ -211,3 +211,32 @@ func (h Handler) Page(c echo.Context) error {
 
 	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
 }
+
+// PageRank
+// @Tags Gameplayer
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param req query request.PageRankGameplayer false "query string"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /gameplayer/page-rank [get]
+func (h Handler) PageRank(c echo.Context) error {
+	var err error
+
+	req := new(request.PageRankGameplayer)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	if err = c.Validate(req); err != nil {
+		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
+	}
+
+	data, count, err := h.usecase.PageRank(req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
+}
