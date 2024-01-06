@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/jihanlugas/badminton/constant"
 	"github.com/jihanlugas/badminton/cryption"
 	"github.com/jihanlugas/badminton/db"
@@ -8,6 +9,7 @@ import (
 	"github.com/jihanlugas/badminton/utils"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
+	"math/rand"
 	"time"
 )
 
@@ -441,30 +443,39 @@ func seed() {
 	}
 	tx.Create(&gors)
 
-	gameDt := time.Date(2022, time.December, 1, 18, 0, 0, 0, time.UTC)
+	gameDt := time.Date(2023, time.August, 6, 20, 0, 0, 0, time.Local)
 
-	games := []model.Game{
-		{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorWahyu, Name: "Game 1", Description: "Game 1 Generated", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, GameDt: gameDt, IsFinish: true, CreateBy: userID, UpdateBy: userID},
-		{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorPrs, Name: "Game 2", Description: "Game 2 Generated", NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, GameDt: gameDt.Add(1 * time.Hour * 24), IsFinish: true, CreateBy: userID, UpdateBy: userID},
-		{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorWahyu, Name: "Game 3", Description: "Game 3 Generated", NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, GameDt: gameDt.Add(2 * time.Hour * 24), IsFinish: true, CreateBy: userID, UpdateBy: userID},
+	games := []model.Game{}
+	for i := 0; i < 10; i++ {
+		gameDt = gameDt.Add(time.Hour * 24 * 7 * time.Duration(i))
+		gameDtNext := gameDt.Add(time.Hour * 24)
+		new := []model.Game{
+			{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorPrs, Name: fmt.Sprintf("Game %d", i*2+1), Description: fmt.Sprintf("Game %d Generated", i*2+1), NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, GameDt: gameDt, IsFinish: true, CreateBy: userID, UpdateBy: userID},
+			{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorWahyu, Name: fmt.Sprintf("Game %d", i*2+2), Description: fmt.Sprintf("Game %d Generated", i*2+2), NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, GameDt: gameDtNext, IsFinish: true, CreateBy: userID, UpdateBy: userID},
+		}
+		games = append(games, new...)
 	}
 	tx.Create(&games)
 
-	gameplayers := []model.Gameplayer{
-		{GameID: games[0].ID, PlayerID: luffyPlayerID, NormalGame: 3, RubberGame: 1, Ball: 4, IsPay: true, Point: 4, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: zoroPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: sakazukiPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: ishoPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: robinPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: namiPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: ussopPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: sanjiPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: chopperPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: frankyPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: brookPlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-		{GameID: games[0].ID, PlayerID: jinbePlayerID, NormalGame: 1, RubberGame: 0, Ball: 1, IsPay: true, Point: 2, CreateBy: userID, UpdateBy: userID},
-	}
+	gameplayers := []model.Gameplayer{}
+	for _, game := range games {
+		new := []model.Gameplayer{
+			{GameID: game.ID, PlayerID: luffyPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: zoroPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: sakazukiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: ishoPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: robinPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: namiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: ussopPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: sanjiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: chopperPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: frankyPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: brookPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: jinbePlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+		}
 
+		gameplayers = append(gameplayers, new...)
+	}
 	tx.Create(&gameplayers)
 
 	err = tx.Commit().Error
