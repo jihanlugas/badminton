@@ -5,6 +5,8 @@ import (
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
 	"gorm.io/gorm"
+	"strings"
+	"time"
 )
 
 type Repository interface {
@@ -101,6 +103,16 @@ func (r repository) PageRank(conn *gorm.DB, req *request.PageRankGameplayer) ([]
 	var err error
 	var data []model.GameplayerRangking
 	var count int64
+	var filterDate *time.Time
+
+	if req.GameDt != "" {
+		req.GameDt = strings.Replace(req.GameDt, "\"", "", -1)
+		date, err := time.Parse(time.RFC3339, req.GameDt)
+		fmt.Println("err ", err)
+		if err == nil {
+			filterDate = &date
+		}
+	}
 
 	query := conn.Model(&data).
 		Select("player_id, player_name, gender,sum(normal_game) as normal_game,sum(rubber_game) as rubber_game,sum(normal_game + rubber_game) as game,sum(ball) as ball,sum(point) as point, RANK () OVER (ORDER BY sum(point) DESC) rank ").
@@ -108,6 +120,12 @@ func (r repository) PageRank(conn *gorm.DB, req *request.PageRankGameplayer) ([]
 
 	if req.Gender != "" {
 		query = query.Where("gender = ?", req.Gender)
+	}
+
+	if filterDate != nil {
+		start := time.Date(filterDate.Local().Year(), filterDate.Local().Month(), 1, 0, 0, 0, 0, time.Local)
+		end := start.AddDate(0, 1, 1)
+		query = query.Where("game_dt >= ? AND game_dt <= ? ", start, end)
 	}
 
 	query = query.Group("player_id, player_name, gender")

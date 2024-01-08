@@ -901,6 +901,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "gameDt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "gender",
                         "in": "query"
                     },
