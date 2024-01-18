@@ -119,6 +119,7 @@ entity "gameplayers" <<(P,LightGreen)>> {
     rubber_game: type(int)
     ball: type(int)
     is_pay: type(bool)
+    set_win: type(int)
     point: type(int)
     create_by: type(varchar)
     create_dt: type(timestampTz)

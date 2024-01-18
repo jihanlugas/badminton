@@ -36,6 +36,7 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 	var gamematchteamplayer model.Gamematchteamplayer
 	var leftplayers []string
 	var rightplayers []string
+	var setWinLeft, setWinRight int64
 
 	if loginUser.Role != constant.RoleAdmin {
 		if req.CompanyID != loginUser.CompanyID {
@@ -70,6 +71,14 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 	}
 
 	for index, data := range req.GameMatchScores {
+		// if draw both team win
+		if data.LeftScore >= data.RightScore {
+			setWinLeft++
+		}
+		if data.RightScore >= data.LeftScore {
+			setWinRight++
+		}
+
 		gamematchscore = model.Gamematchscore{
 			GameID:         req.GameID,
 			GamematchID:    gamematch.ID,
@@ -135,6 +144,7 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 			gameplayer.NormalGame = gameplayer.NormalGame + 1
 		}
 		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.SetWin = gameplayer.SetWin + setWinLeft
 		gameplayer.Point = gameplayer.Point + req.LeftTeamPoint
 		gameplayer.UpdateBy = loginUser.UserID
 		err = u.gameplayerRepo.Update(tx, gameplayer)
@@ -154,6 +164,7 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 			gameplayer.NormalGame = gameplayer.NormalGame + 1
 		}
 		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.SetWin = gameplayer.SetWin + setWinRight
 		gameplayer.Point = gameplayer.Point + req.RightTeamPoint
 		gameplayer.UpdateBy = loginUser.UserID
 		err = u.gameplayerRepo.Update(tx, gameplayer)

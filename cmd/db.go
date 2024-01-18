@@ -377,6 +377,19 @@ func seed() {
 	frankyPlayerID := utils.GetUniqueID()
 	brookPlayerID := utils.GetUniqueID()
 	jinbePlayerID := utils.GetUniqueID()
+	enelPlayerID := utils.GetUniqueID()
+	buggyPlayerID := utils.GetUniqueID()
+	arlongPlayerID := utils.GetUniqueID()
+	kuroPlayerID := utils.GetUniqueID()
+	kriegPlayerID := utils.GetUniqueID()
+	smokerPlayerID := utils.GetUniqueID()
+	tashigiPlayerID := utils.GetUniqueID()
+	hinaPlayerID := utils.GetUniqueID()
+	wapolPlayerID := utils.GetUniqueID()
+	crocodilePlayerID := utils.GetUniqueID()
+	lucciPlayerID := utils.GetUniqueID()
+	kakuPlayerID := utils.GetUniqueID()
+
 	yujiPlayerID := utils.GetUniqueID()
 	megumiPlayerID := utils.GetUniqueID()
 	sukunaPlayerID := utils.GetUniqueID()
@@ -417,7 +430,8 @@ func seed() {
 	}
 	tx.Create(&usercompanies)
 
-	players := []model.Player{
+	var players []model.Player
+	playersBtc := []model.Player{
 		{ID: luffyPlayerID, CompanyID: btcCompanyID, Name: "Monkey D. Luffy", Email: "luffy@gmail.com", NoHp: utils.FormatPhoneTo62("08123456789"), Address: "Fusha Mura", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: zoroPlayerID, CompanyID: btcCompanyID, Name: "Roronoa Zoro", Email: "zoro@gmail.com", NoHp: utils.FormatPhoneTo62("08123456777"), Address: "Jl. Kehidupan", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: sakazukiPlayerID, CompanyID: btcCompanyID, Name: "Sakazuki", Email: "sakazuki@gmail.com", NoHp: utils.FormatPhoneTo62("08123456779"), Address: "Jl. Perkara", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
@@ -430,10 +444,30 @@ func seed() {
 		{ID: frankyPlayerID, CompanyID: btcCompanyID, Name: "Franky", Email: "franky@gmail.com", NoHp: utils.FormatPhoneTo62("081234654112"), Address: "Jl. Lelaki", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: brookPlayerID, CompanyID: btcCompanyID, Name: "Brook", Email: "brook@gmail.com", NoHp: utils.FormatPhoneTo62("081234654114"), Address: "Jl. Menepati Janji", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: jinbePlayerID, CompanyID: btcCompanyID, Name: "Jinbe", Email: "jinbe@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+
+		{ID: enelPlayerID, CompanyID: btcCompanyID, Name: "Enel", Email: "enel@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: buggyPlayerID, CompanyID: btcCompanyID, Name: "Buggy", Email: "buggy@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: arlongPlayerID, CompanyID: btcCompanyID, Name: "Arlong", Email: "arlong@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: kuroPlayerID, CompanyID: btcCompanyID, Name: "Kuro", Email: "kuro@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: kriegPlayerID, CompanyID: btcCompanyID, Name: "Krieg", Email: "krieg@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: smokerPlayerID, CompanyID: btcCompanyID, Name: "Smoker", Email: "smoker@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: tashigiPlayerID, CompanyID: btcCompanyID, Name: "Tashigi", Email: "tashigi@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: hinaPlayerID, CompanyID: btcCompanyID, Name: "Hina", Email: "hina@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_FEMALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: wapolPlayerID, CompanyID: btcCompanyID, Name: "Wapol", Email: "wapol@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: crocodilePlayerID, CompanyID: btcCompanyID, Name: "Crocodile", Email: "crocodile@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: lucciPlayerID, CompanyID: btcCompanyID, Name: "Lucci", Email: "lucci@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+		{ID: kakuPlayerID, CompanyID: btcCompanyID, Name: "Kaku", Email: "kaku@gmail.com", NoHp: utils.FormatPhoneTo62("081234654115"), Address: "Jl. Yang Dihormati", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
+	}
+
+	playersBlp := []model.Player{
 		{ID: yujiPlayerID, CompanyID: blpCompanyID, Name: "Itadori Yuji", Email: "yuji@gmail.com", NoHp: utils.FormatPhoneTo62("08128856789"), Address: "Jl. Buntu", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: megumiPlayerID, CompanyID: blpCompanyID, Name: "Fushiguro Megumi", Email: "megumi@gmail.com", NoHp: utils.FormatPhoneTo62("08124556789"), Address: "Jl. Bangka", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 		{ID: sukunaPlayerID, CompanyID: blpCompanyID, Name: "Ryomen Sukuna", Email: "sukuna@gmail.com", NoHp: utils.FormatPhoneTo62("08123457689"), Address: "Jl. Permasalahan", Gender: constant.GENDER_MALE, IsActive: true, PhotoID: "", CreateBy: userID, UpdateBy: userID},
 	}
+
+	players = append(players, playersBtc...)
+	players = append(players, playersBlp...)
+
 	tx.Create(&players)
 
 	gors := []model.Gor{
@@ -443,38 +477,50 @@ func seed() {
 	}
 	tx.Create(&gors)
 
-	gameDt := time.Date(2023, time.August, 6, 20, 0, 0, 0, time.Local)
+	gameDt := time.Date(2023, time.September, 6, 20, 0, 0, 0, time.Local)
 
 	games := []model.Game{}
-	for i := 0; i < 10; i++ {
-		gameDt = gameDt.Add(time.Hour * 24 * 7 * time.Duration(i))
+	for i := 0; i < 20; i++ {
+		gameDt = gameDt.Add(time.Hour * 24 * 7)
 		gameDtNext := gameDt.Add(time.Hour * 24)
-		new := []model.Game{
+		newGame := []model.Game{
 			{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorPrs, Name: fmt.Sprintf("Game %d", i*2+1), Description: fmt.Sprintf("Game %d Generated", i*2+1), NormalGamePrice: 7000, RubberGamePrice: 10000, BallPrice: 3000, GameDt: gameDt, IsFinish: true, CreateBy: userID, UpdateBy: userID},
 			{ID: utils.GetUniqueID(), CompanyID: btcCompanyID, GorID: btcGorWahyu, Name: fmt.Sprintf("Game %d", i*2+2), Description: fmt.Sprintf("Game %d Generated", i*2+2), NormalGamePrice: 8000, RubberGamePrice: 11000, BallPrice: 3000, GameDt: gameDtNext, IsFinish: true, CreateBy: userID, UpdateBy: userID},
 		}
-		games = append(games, new...)
+		games = append(games, newGame...)
 	}
 	tx.Create(&games)
 
 	gameplayers := []model.Gameplayer{}
 	for _, game := range games {
-		new := []model.Gameplayer{
-			{GameID: game.ID, PlayerID: luffyPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: zoroPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: sakazukiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: ishoPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: robinPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: namiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: ussopPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: sanjiPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: chopperPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: frankyPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: brookPlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
-			{GameID: game.ID, PlayerID: jinbePlayerID, NormalGame: rand.Int63n(10), RubberGame: rand.Int63n(5), Ball: rand.Int63n(15), IsPay: true, Point: rand.Int63n(15) - 5, CreateBy: userID, UpdateBy: userID},
+		newGameplayer := []model.Gameplayer{
+			{GameID: game.ID, PlayerID: luffyPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: zoroPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: sakazukiPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: ishoPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: robinPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: namiPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: ussopPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: sanjiPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: chopperPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: frankyPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: brookPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: jinbePlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: enelPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: buggyPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: arlongPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: kuroPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: kriegPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: smokerPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: tashigiPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: hinaPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: wapolPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: crocodilePlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: lucciPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
+			{GameID: game.ID, PlayerID: kakuPlayerID, NormalGame: rand.Int63n(5), RubberGame: rand.Int63n(3), Ball: rand.Int63n(10), IsPay: true, SetWin: rand.Int63n(8), Point: rand.Int63n(8) - 4, CreateBy: userID, UpdateBy: userID},
 		}
 
-		gameplayers = append(gameplayers, new...)
+		gameplayers = append(gameplayers, newGameplayer...)
 	}
 	tx.Create(&gameplayers)
 

@@ -183,6 +183,7 @@ type GameplayerView struct {
 	RubberGame int64          `json:"rubberGame"`
 	Ball       int64          `json:"ball"`
 	IsPay      bool           `json:"isPay"`
+	SetWin     int64          `json:"setWin"`
 	Point      int64          `json:"point"`
 	CreateBy   string         `json:"createBy"`
 	CreateDt   time.Time      `json:"createDt"`
@@ -212,6 +213,7 @@ type GameplayerRangking struct {
 	RubberGame int64  `json:"rubberGame"`
 	Game       int64  `json:"game"`
 	Ball       int64  `json:"ball"`
+	SetWin     int64  `json:"setWin"`
 	Point      int64  `json:"point"`
 	Rank       int64  `json:"rank"`
 }
