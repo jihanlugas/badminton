@@ -982,6 +982,9 @@ paths:
       - application/json
       parameters:
       - in: query
+        name: companyId
+        type: string
+      - in: query
         name: gameDt
         type: string
       - in: query

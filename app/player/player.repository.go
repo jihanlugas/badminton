@@ -57,7 +57,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PagePlayer) ([]model.Player
 	if req.GameID != "" {
 		query = conn.Model(&data).
 			Joins("LEFT JOIN gameplayers_view ON gameplayers_view.player_id = players_view.id AND gameplayers_view.game_id = ?", req.GameID).
-			Where("LOWER(company_id) LIKE LOWER(?)", "%"+req.CompanyID+"%").
+			Where("players_view.company_id = ? ", req.CompanyID).
 			Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
 			Where("LOWER(email) LIKE LOWER(?)", "%"+req.Email+"%").
 			Where("LOWER(no_hp) LIKE LOWER(?)", "%"+req.NoHp+"%").
@@ -65,7 +65,7 @@ func (r repository) Page(conn *gorm.DB, req *request.PagePlayer) ([]model.Player
 			Where("gameplayers_view.id IS NULL")
 	} else {
 		query = conn.Model(&data).
-			Where("LOWER(company_id) LIKE LOWER(?)", "%"+req.CompanyID+"%").
+			Where("company_id = ? ", req.CompanyID).
 			Where("LOWER(name) LIKE LOWER(?)", "%"+req.Name+"%").
 			Where("LOWER(email) LIKE LOWER(?)", "%"+req.Email+"%").
 			Where("LOWER(no_hp) LIKE LOWER(?)", "%"+req.NoHp+"%").
