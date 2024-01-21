@@ -37,6 +37,7 @@ func (u usecaseGameplayer) Create(loginUser jwt.UserLogin, req *request.CreateGa
 	var data model.Gameplayer
 
 	data = model.Gameplayer{
+		CompanyID:  loginUser.CompanyID,
 		GameID:     req.GameID,
 		PlayerID:   req.PlayerID,
 		NormalGame: 0,
@@ -71,6 +72,7 @@ func (u usecaseGameplayer) CreateBulk(loginUser jwt.UserLogin, req *request.Crea
 
 	for _, playerID := range req.ListPlayerID {
 		data = append(data, model.Gameplayer{
+			CompanyID:  loginUser.CompanyID,
 			GameID:     req.GameID,
 			PlayerID:   playerID,
 			NormalGame: 0,

@@ -30,6 +30,7 @@ type PageGameplayer struct {
 
 type PageRankGameplayer struct {
 	Paging
-	Gender string `json:"gender" form:"gender" query:"gender"`
-	GameDt string `json:"gameDt" form:"gameDt" query:"gameDt"`
+	CompanyID string `json:"companyId" form:"companyId" query:"companyId"`
+	Gender    string `json:"gender" form:"gender" query:"gender"`
+	GameDt    string `json:"gameDt" form:"gameDt" query:"gameDt"`
 }

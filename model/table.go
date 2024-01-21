@@ -120,6 +120,7 @@ type Game struct {
 
 type Gameplayer struct {
 	ID         string         `gorm:"primaryKey" json:"id"`
+	CompanyID  string         `gorm:"not null" json:"companyId"`
 	GameID     string         `gorm:"not null" json:"gameId"`
 	PlayerID   string         `gorm:"not null" json:"playerId"`
 	NormalGame int64          `gorm:"not null" json:"normalGame"`

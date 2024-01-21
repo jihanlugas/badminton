@@ -115,6 +115,7 @@ func (r repository) PageRank(conn *gorm.DB, req *request.PageRankGameplayer) ([]
 
 	query := conn.Model(&data).
 		Select("player_id, player_name, gender, sum(normal_game) as normal_game, sum(rubber_game) as rubber_game, sum(normal_game + rubber_game) as game, sum(ball) as ball, sum(set_win) as set_win, sum(point) as point, RANK () OVER (ORDER BY sum(point) DESC, sum(set_win) DESC) rank ").
+		Where("company_id = ? ", req.CompanyID).
 		Where("is_finish = ?", true)
 
 	if req.Gender != "" {

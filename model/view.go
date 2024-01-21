@@ -177,6 +177,7 @@ func (PlayerView) TableName() string {
 
 type GameplayerView struct {
 	ID         string         `json:"id"`
+	CompanyID  string         `json:"companyId"`
 	GameID     string         `json:"gameId"`
 	PlayerID   string         `json:"playerId"`
 	NormalGame int64          `json:"normalGame"`
