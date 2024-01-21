@@ -398,7 +398,7 @@ func seed() {
 	tx.Create(&users)
 
 	companies := []model.Company{
-		{ID: demoCompanyID, Name: "BTC Pekanbaru", Description: "BTC Pekanbaru Company", Balance: 50000, CreateBy: userID, UpdateBy: userID},
+		{ID: demoCompanyID, Name: "Demo", Description: "Demo Company", Balance: 50000, CreateBy: userID, UpdateBy: userID},
 	}
 	tx.Create(&companies)
 
