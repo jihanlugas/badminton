@@ -47,16 +47,16 @@ func (h Handler) Page(c echo.Context) error {
 	return response.Success(http.StatusOK, "success", response.PayloadPagination(req, data, count)).SendJSON(c)
 }
 
-// Create
+// CreateMatchpoint
 // @Tags Gamematch
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param req body request.CreateGamematch true "json req body"
+// @Param req body request.CreateMatchpointGamematch true "json req body"
 // @Success      200  {object}	response.Response
 // @Failure      500  {object}  response.Response
-// @Router /gamematch [post]
-func (h Handler) Create(c echo.Context) error {
+// @Router /gamematch/match-point [post]
+func (h Handler) CreateMatchpoint(c echo.Context) error {
 	var err error
 
 	loginUser, err := jwt.GetUserLoginInfo(c)
@@ -64,7 +64,7 @@ func (h Handler) Create(c echo.Context) error {
 		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
 	}
 
-	req := new(request.CreateGamematch)
+	req := new(request.CreateMatchpointGamematch)
 	if err = c.Bind(req); err != nil {
 		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
 	}
@@ -73,7 +73,41 @@ func (h Handler) Create(c echo.Context) error {
 		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
 	}
 
-	err = h.usecase.Create(loginUser, req)
+	err = h.usecase.CreateMatchpoint(loginUser, req)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", response.Payload{}).SendJSON(c)
+}
+
+// CreateMatch
+// @Tags Gamematch
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param req body request.CreateMatchGamematch true "json req body"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /gamematch/match [post]
+func (h Handler) CreateMatch(c echo.Context) error {
+	var err error
+
+	loginUser, err := jwt.GetUserLoginInfo(c)
+	if err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	req := new(request.CreateMatchGamematch)
+	if err = c.Bind(req); err != nil {
+		return response.Error(http.StatusBadRequest, err.Error(), response.Payload{}).SendJSON(c)
+	}
+
+	if err = c.Validate(req); err != nil {
+		return response.Error(http.StatusBadRequest, "error validation", response.ValidationError(err)).SendJSON(c)
+	}
+
+	err = h.usecase.CreateMatch(loginUser, req)
 	if err != nil {
 		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
 	}

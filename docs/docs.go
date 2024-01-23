@@ -604,7 +604,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/gamematch": {
+        "/gamematch/match": {
             "post": {
                 "security": [
                     {
@@ -627,7 +627,50 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.CreateGamematch"
+                            "$ref": "#/definitions/request.CreateMatchGamematch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/gamematch/match-point": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gamematch"
+                ],
+                "parameters": [
+                    {
+                        "description": "json req body",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateMatchpointGamematch"
                         }
                     }
                 ],
@@ -2240,7 +2283,105 @@ const docTemplate = `{
                 }
             }
         },
-        "request.CreateGamematch": {
+        "request.CreateGameplayer": {
+            "type": "object",
+            "required": [
+                "gameId",
+                "playerId"
+            ],
+            "properties": {
+                "gameId": {
+                    "type": "string"
+                },
+                "playerId": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.CreateGor": {
+            "type": "object",
+            "required": [
+                "companyId",
+                "name"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "ballPrice": {
+                    "type": "integer"
+                },
+                "companyId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "normalGamePrice": {
+                    "type": "integer"
+                },
+                "rubberGamePrice": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.CreateMatchGamematch": {
+            "type": "object",
+            "required": [
+                "companyId",
+                "gameId",
+                "matchName"
+            ],
+            "properties": {
+                "ball": {
+                    "type": "integer"
+                },
+                "companyId": {
+                    "type": "string"
+                },
+                "gameId": {
+                    "type": "string"
+                },
+                "gameMatchTeams": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name"
+                        ],
+                        "properties": {
+                            "gameMatchTeamPlayers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "playerId"
+                                    ],
+                                    "properties": {
+                                        "playerId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "isRubber": {
+                    "type": "boolean"
+                },
+                "matchName": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.CreateMatchpointGamematch": {
             "type": "object",
             "required": [
                 "companyId",
@@ -2309,51 +2450,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rightPoint": {
-                    "type": "integer"
-                }
-            }
-        },
-        "request.CreateGameplayer": {
-            "type": "object",
-            "required": [
-                "gameId",
-                "playerId"
-            ],
-            "properties": {
-                "gameId": {
-                    "type": "string"
-                },
-                "playerId": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.CreateGor": {
-            "type": "object",
-            "required": [
-                "companyId",
-                "name"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "ballPrice": {
-                    "type": "integer"
-                },
-                "companyId": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "normalGamePrice": {
-                    "type": "integer"
-                },
-                "rubberGamePrice": {
                     "type": "integer"
                 }
             }

@@ -132,7 +132,8 @@ func Init() *echo.Echo {
 
 	gamematchRouter := router.Group("/gamematch")
 	gamematchRouter.GET("/page", gamematchHandler.Page, checkTokenMiddleware)
-	gamematchRouter.POST("", gamematchHandler.Create, checkTokenMiddleware)
+	gamematchRouter.POST("/match-point", gamematchHandler.CreateMatchpoint, checkTokenMiddleware)
+	gamematchRouter.POST("/match", gamematchHandler.CreateMatch, checkTokenMiddleware)
 
 	return router
 

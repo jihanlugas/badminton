@@ -15,7 +15,8 @@ import (
 )
 
 type Usecase interface {
-	Create(loginUser jwt.UserLogin, req *request.CreateGamematch) error
+	CreateMatchpoint(loginUser jwt.UserLogin, req *request.CreateMatchpointGamematch) error
+	CreateMatch(loginUser jwt.UserLogin, req *request.CreateMatchGamematch) error
 	Page(req *request.PageGamematch) ([]model.GamematchView, int64, error)
 }
 
@@ -27,7 +28,7 @@ type usecaseGamematch struct {
 	gamematchteamplayerRepo gamematchteamplayer.Repository
 }
 
-func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGamematch) error {
+func (u usecaseGamematch) CreateMatchpoint(loginUser jwt.UserLogin, req *request.CreateMatchpointGamematch) error {
 	var err error
 	var gamematch model.Gamematch
 	var gameplayer model.Gameplayer
@@ -166,6 +167,77 @@ func (u usecaseGamematch) Create(loginUser jwt.UserLogin, req *request.CreateGam
 		gameplayer.Ball = gameplayer.Ball + req.Ball
 		gameplayer.SetWin = gameplayer.SetWin + setWinRight
 		gameplayer.Point = gameplayer.Point + req.RightTeamPoint
+		gameplayer.UpdateBy = loginUser.UserID
+		err = u.gameplayerRepo.Update(tx, gameplayer)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func (u usecaseGamematch) CreateMatch(loginUser jwt.UserLogin, req *request.CreateMatchGamematch) error {
+	var err error
+	var gameplayer model.Gameplayer
+	var leftplayers []string
+	var rightplayers []string
+
+	if loginUser.Role != constant.RoleAdmin {
+		if req.CompanyID != loginUser.CompanyID {
+			return errors.New("permission denied")
+		}
+	}
+
+	conn, closeConn := db.GetConnection()
+	defer closeConn()
+
+	tx := conn.Begin()
+
+	for index, data := range req.GameMatchTeams {
+		for _, player := range data.GameMatchTeamPlayers {
+			if index == 0 {
+				leftplayers = append(leftplayers, player.PlayerID)
+			} else {
+				rightplayers = append(rightplayers, player.PlayerID)
+			}
+		}
+	}
+
+	for _, playerId := range leftplayers {
+		gameplayer, err = u.gameplayerRepo.GetByGameIdPlayerId(conn, req.GameID, playerId)
+		if err != nil {
+			return err
+		}
+		if req.IsRubber {
+			gameplayer.RubberGame = gameplayer.RubberGame + 1
+		} else {
+			gameplayer.NormalGame = gameplayer.NormalGame + 1
+		}
+		gameplayer.Ball = gameplayer.Ball + req.Ball
+		gameplayer.UpdateBy = loginUser.UserID
+		err = u.gameplayerRepo.Update(tx, gameplayer)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, playerId := range rightplayers {
+		gameplayer, err = u.gameplayerRepo.GetByGameIdPlayerId(conn, req.GameID, playerId)
+		if err != nil {
+			return err
+		}
+		if req.IsRubber {
+			gameplayer.RubberGame = gameplayer.RubberGame + 1
+		} else {
+			gameplayer.NormalGame = gameplayer.NormalGame + 1
+		}
+		gameplayer.Ball = gameplayer.Ball + req.Ball
 		gameplayer.UpdateBy = loginUser.UserID
 		err = u.gameplayerRepo.Update(tx, gameplayer)
 		if err != nil {

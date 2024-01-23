@@ -81,7 +81,72 @@ definitions:
     - gorId
     - name
     type: object
-  request.CreateGamematch:
+  request.CreateGameplayer:
+    properties:
+      gameId:
+        type: string
+      playerId:
+        type: string
+    required:
+    - gameId
+    - playerId
+    type: object
+  request.CreateGor:
+    properties:
+      address:
+        type: string
+      ballPrice:
+        type: integer
+      companyId:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      normalGamePrice:
+        type: integer
+      rubberGamePrice:
+        type: integer
+    required:
+    - companyId
+    - name
+    type: object
+  request.CreateMatchGamematch:
+    properties:
+      ball:
+        type: integer
+      companyId:
+        type: string
+      gameId:
+        type: string
+      gameMatchTeams:
+        items:
+          properties:
+            gameMatchTeamPlayers:
+              items:
+                properties:
+                  playerId:
+                    type: string
+                required:
+                - playerId
+                type: object
+              type: array
+            name:
+              type: string
+          required:
+          - name
+          type: object
+        type: array
+      isRubber:
+        type: boolean
+      matchName:
+        type: string
+    required:
+    - companyId
+    - gameId
+    - matchName
+    type: object
+  request.CreateMatchpointGamematch:
     properties:
       ball:
         type: integer
@@ -128,36 +193,6 @@ definitions:
     - companyId
     - gameId
     - matchName
-    type: object
-  request.CreateGameplayer:
-    properties:
-      gameId:
-        type: string
-      playerId:
-        type: string
-    required:
-    - gameId
-    - playerId
-    type: object
-  request.CreateGor:
-    properties:
-      address:
-        type: string
-      ballPrice:
-        type: integer
-      companyId:
-        type: string
-      description:
-        type: string
-      name:
-        type: string
-      normalGamePrice:
-        type: integer
-      rubberGamePrice:
-        type: integer
-    required:
-    - companyId
-    - name
     type: object
   request.CreatePlayer:
     properties:
@@ -730,7 +765,7 @@ paths:
       - BearerAuth: []
       tags:
       - Game
-  /gamematch:
+  /gamematch/match:
     post:
       consumes:
       - application/json
@@ -740,7 +775,33 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/request.CreateGamematch'
+          $ref: '#/definitions/request.CreateMatchGamematch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      tags:
+      - Gamematch
+  /gamematch/match-point:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: json req body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateMatchpointGamematch'
       produces:
       - application/json
       responses:
