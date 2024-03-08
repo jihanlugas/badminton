@@ -7,6 +7,7 @@ import (
 	"github.com/jihanlugas/badminton/db"
 	"github.com/jihanlugas/badminton/model"
 	"github.com/jihanlugas/badminton/request"
+	"github.com/jihanlugas/badminton/utils"
 )
 
 type Usecase interface {
@@ -46,7 +47,7 @@ func (u usecasePlayer) Create(loginUser jwt.UserLogin, req *request.CreatePlayer
 		CompanyID: req.CompanyID,
 		Name:      req.Name,
 		Email:     req.Email,
-		NoHp:      req.NoHp,
+		NoHp:      utils.FormatPhoneTo62(req.NoHp),
 		Address:   req.Address,
 		Gender:    req.Gender,
 		IsActive:  req.IsActive,
@@ -92,7 +93,7 @@ func (u usecasePlayer) Update(loginUser jwt.UserLogin, id string, req *request.U
 	data.CompanyID = req.CompanyID
 	data.Name = req.Name
 	data.Email = req.Email
-	data.NoHp = req.NoHp
+	data.NoHp = utils.FormatPhoneTo62(req.NoHp)
 	data.Address = req.Address
 	data.Gender = req.Gender
 	data.IsActive = req.IsActive
