@@ -74,7 +74,7 @@ func Init() *echo.Echo {
 
 	router.POST("/sign-in", authenticationHandler.SignIn)
 	router.GET("/sign-out", authenticationHandler.SignOut)
-	//router.POST("/sign-up", authenticationHandler.SignUp)
+	router.POST("/identity/:provider", authenticationHandler.Identity)
 	router.GET("/refresh-token", authenticationHandler.RefreshToken, checkTokenMiddleware)
 	router.GET("/init", authenticationHandler.Init, checkTokenMiddleware)
 

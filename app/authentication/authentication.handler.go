@@ -131,3 +131,28 @@ func (h AuthenticationHandler) Init(c echo.Context) error {
 
 	return response.Success(http.StatusOK, "success", res).SendJSON(c)
 }
+
+// Identity
+// @Tags Authentication
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID"
+// @Success      200  {object}	response.Response
+// @Failure      500  {object}  response.Response
+// @Router /indentity/{provider} [post]
+func (h AuthenticationHandler) Identity(c echo.Context) (err error) {
+	provider := c.Param("provider")
+	if provider == "" {
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	switch provider {
+	case "google":
+	case "github":
+	default:
+		return response.Error(http.StatusBadRequest, "data not found", response.Payload{}).SendJSON(c)
+	}
+
+	return response.Success(http.StatusOK, "success", nil).SendJSON(c)
+}
